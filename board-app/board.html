@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Whiteboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="toolbar">
+    <button draggable="true" data-tool="text">Text</button>
+    <button draggable="true" data-tool="list">Add List</button>
+    <label>Font Size: <input type="number" id="fontSize" value="30" min="8" max="32" onchange="window.setFontSize(this.value)"></label>
+    <div class="toolbar-color-container">
+        <button id="toolbarColorBtn" type="button">Font Color</button>
+        <div class="toolbar-color-grid">
+            <div class="color-option" style="background-color: #000000;" title="#000000"></div>
+            <div class="color-option" style="background-color: #FFFFFF; border: 2px solid #333;" title="#FFFFFF"></div>
+            <div class="color-option" style="background-color: #FF0000;" title="#FF0000"></div>
+            <div class="color-option" style="background-color: #00FF00;" title="#00FF00"></div>
+            <div class="color-option" style="background-color: #0000FF;" title="#0000FF"></div>
+            <div class="color-option" style="background-color: #FFFF00;" title="#FFFF00"></div>
+            <div class="color-option" style="background-color: #FF00FF;" title="#FF00FF"></div>
+            <div class="color-option" style="background-color: #00FFFF;" title="#00FFFF"></div>
+            <div class="color-option" style="background-color: #FFA500;" title="#FFA500"></div>
+            <div class="color-option" style="background-color: #800080;" title="#800080"></div>
+            <div class="color-option" style="background-color: #FFC0CB;" title="#FFC0CB"></div>
+            <div class="color-option" style="background-color: #A52A2A;" title="#A52A2A"></div>
+            <div class="color-option" style="background-color: #808080;" title="#808080"></div>
+            <div class="color-option" style="background-color: #FFD700;" title="#FFD700"></div>
+            <div class="color-option" style="background-color: #008000;" title="#008000"></div>
+            <div class="color-option" style="background-color: #0000CD;" title="#0000CD"></div>
+        </div>
+    </div>
+    <button onclick="window.clearBlock()">Clear Block</button>
+</div>
+
+<div class="board-container">
+
+    <!-- Top Date Bar -->
+    <div class="top-bar">
+        <span id="currentDate"></span>
+    </div>
+
+    <!-- 5 Main Rows -->
+    <div class="row">
+        <div class="block left-box" data-id="1"><div class="text-container"></div></div>
+        <div class="block editable" data-id="2"><div class="text-container"></div></div>
+    </div>
+
+    <div class="row">
+        <div class="block left-box" data-id="3"><div class="text-container"></div></div>
+        <div class="block editable" data-id="4"><div class="text-container"></div></div>
+    </div>
+
+    <div class="row">
+        <div class="block left-box" data-id="5"><div class="text-container"></div></div>
+        <div class="block editable" data-id="6"><div class="text-container"></div></div>
+    </div>
+
+    <div class="row">
+        <div class="block left-box" data-id="7"><div class="text-container"></div></div>
+        <div class="block editable" data-id="8"><div class="text-container"></div></div>
+    </div>
+
+    <div class="row">
+        <div class="block left-box" data-id="9"><div class="text-container"></div></div>
+        <div class="block editable" data-id="10"><div class="text-container"></div></div>
+    </div>
+
+    <!-- Bottom Room Section -->
+    <div class="bottom-section">
+
+        <div class="square" data-id="11">
+            <div class="room-header">
+                <span>Room 1 - Dr.</span>
+                <input type="text" class="dr-initials" id="room1-dr" data-id="room1-dr" maxlength="3">
+            </div>
+            <div class="block" data-id="11">
+                <div class="text-container"></div>
+            </div>
+        </div>
+
+        <div class="square" data-id="12">
+            <div class="room-header">
+                <span>Room 2 - Dr.</span>
+                <input type="text" class="dr-initials" id="room2-dr" data-id="room2-dr" maxlength="3">
+            </div>
+            <div class="block" data-id="12">
+                <div class="text-container"></div>
+            </div>
+        </div>
+
+        <div class="square" data-id="13">
+            <div class="room-header">
+                <span>Room 3 - Dr.</span>
+                <input type="text" class="dr-initials" id="room3-dr" data-id="room3-dr" maxlength="3">
+            </div>
+            <div class="block" data-id="13">
+                <div class="text-container"></div>
+            </div>
+        </div>
+
+        <div class="square" data-id="14">
+            <div class="room-header">
+                <span>Euthanasia</span>
+            </div>
+            <div class="block" data-id="14">
+                <div class="text-container"></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="board.js"></script>
+
+</body>
+</html>
