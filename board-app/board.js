@@ -59,14 +59,15 @@ if (mode === "editor") {
     document.head.appendChild(style);
 }
 
-// Fallback for window.api if not defined
+// Fallback for window.api if not defined (browser mode uses BroadcastChannel)
 if (!window.api) {
+    const _channel = new BroadcastChannel('whiteboard-sync');
     window.api = {
         updateBlock: (data) => {
-            console.log("updateBlock called:", data);
+            _channel.postMessage(data);
         },
         onUpdateBlock: (callback) => {
-            console.log("onUpdateBlock listener registered");
+            _channel.addEventListener('message', (event) => callback(event.data));
         }
     };
 }
