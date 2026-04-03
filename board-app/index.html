@@ -70,7 +70,14 @@
             <a href="board.html?mode=editor" target="_blank">Open Editor</a>
             <a href="board.html?mode=board" target="_blank">Open Display (read-only)</a>
         </div>
-        <p class="note">Both windows stay in sync automatically via your browser.</p>
+        <p class="note">
+            <strong>Same machine:</strong> Both windows stay in sync automatically via your browser.<br><br>
+            <strong>Multiple computers (network):</strong> Run <code>node server.js</code> in the
+            <code>board-app</code> folder on your server. The console will print the network URL
+            (e.g. <code>http://192.168.1.10:3000</code>). Open that URL on every computer — all
+            edits will sync in real time.<br><br>
+            If <code>ws</code> is not yet installed, run <code>npm install</code> first.
+        </p>
     </div>
 </body>
 </html>

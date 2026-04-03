@@ -59,17 +59,70 @@ if (mode === "editor") {
     document.head.appendChild(style);
 }
 
-// Fallback for window.api if not defined (browser mode uses BroadcastChannel)
+// Fallback for window.api if not defined (browser mode)
 if (!window.api) {
-    const _channel = new BroadcastChannel('whiteboard-sync');
-    window.api = {
-        updateBlock: (data) => {
-            _channel.postMessage(data);
-        },
-        onUpdateBlock: (callback) => {
-            _channel.addEventListener('message', (event) => callback(event.data));
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+        // Served from the WebSocket server — connects back to the same host for real-time
+        // cross-machine sync.
+        const _blockCallbacks = [];
+        const _drCallbacks = [];
+        let _ws = null;
+
+        function _connect() {
+            const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            _ws = new WebSocket(`${proto}//${window.location.host}`);
+
+            _ws.onmessage = (event) => {
+                let msg;
+                try { msg = JSON.parse(event.data); } catch { return; }
+
+                if (msg.type === 'update-block') {
+                    _blockCallbacks.forEach(cb => cb({ id: msg.id, data: msg.data }));
+                } else if (msg.type === 'dr-initials-changed') {
+                    _drCallbacks.forEach(cb => cb(msg.data));
+                } else if (msg.type === 'full-state') {
+                    if (msg.blocks) {
+                        Object.entries(msg.blocks).forEach(([id, data]) => {
+                            _blockCallbacks.forEach(cb => cb({ id, data }));
+                        });
+                    }
+                    if (msg.drInitials && Object.keys(msg.drInitials).length > 0) {
+                        _drCallbacks.forEach(cb => cb(msg.drInitials));
+                    }
+                }
+            };
+
+            _ws.onclose = () => setTimeout(_connect, 2000);
         }
-    };
+
+        _connect();
+
+        window.api = {
+            updateBlock: (data) => {
+                if (_ws && _ws.readyState === WebSocket.OPEN) {
+                    _ws.send(JSON.stringify({ type: 'update-block', id: data.id, data: data.data }));
+                }
+            },
+            onUpdateBlock: (callback) => { _blockCallbacks.push(callback); },
+            updateDrInitials: (data) => {
+                if (_ws && _ws.readyState === WebSocket.OPEN) {
+                    _ws.send(JSON.stringify({ type: 'dr-initials-changed', data }));
+                }
+            },
+            onDrInitialsChanged: (callback) => { _drCallbacks.push(callback); }
+        };
+    } else {
+        // Local file mode — use BroadcastChannel (same machine, cross-tab only)
+        const _channel = new BroadcastChannel('whiteboard-sync');
+        window.api = {
+            updateBlock: (data) => { _channel.postMessage(data); },
+            onUpdateBlock: (callback) => {
+                _channel.addEventListener('message', (event) => callback(event.data));
+            },
+            updateDrInitials: () => {},
+            onDrInitialsChanged: () => {}
+        };
+    }
 }
 
 const blocks = document.querySelectorAll('.block');
@@ -240,8 +293,11 @@ function saveDrInitials() {
     });
     localStorage.setItem(DR_STORAGE_KEY, JSON.stringify(drData));
     
-    // Broadcast change to other windows
+    // Broadcast change to other windows/machines
     window.postMessage({ type: "dr-initials-changed", data: drData }, "*");
+    if (window.api && window.api.updateDrInitials) {
+        window.api.updateDrInitials(drData);
+    }
 }
 
 // Load Dr. initials
@@ -1230,13 +1286,30 @@ window.addEventListener("load", () => {
 
 window.api.onUpdateBlock((data) => {
     const { id, data: allData } = data;
-    // Only update if there's actual data
-    if (allData && allData.length > 0) {
-        undoStack[id] = [allData];
+    if (allData !== undefined) {
+        undoStack[id] = allData.length > 0 ? [allData] : [];
         redrawBlock(id);
     }
     saveDataToStorage();
 });
+
+if (window.api.onDrInitialsChanged) {
+    window.api.onDrInitialsChanged((data) => {
+        // Apply received Dr. initials data and update the DOM
+        const drInitialsInputs = document.querySelectorAll(".dr-initials");
+        drInitialsInputs.forEach(input => {
+            const id = input.dataset.id || input.id;
+            if (data[id] !== undefined) {
+                input.value = data[id];
+                if (mode === "board") {
+                    const span = input.parentElement.querySelector(".dr-initials-display");
+                    if (span) span.textContent = data[id];
+                }
+            }
+        });
+        localStorage.setItem(DR_STORAGE_KEY, JSON.stringify(data));
+    });
+}
 
 if (mode === "editor") {
     document.addEventListener("keydown", (e) => {
