@@ -61,6 +61,7 @@ if (!window.api) {
         // cross-machine sync.
         const _blockCallbacks = [];
         const _drCallbacks = [];
+        const _euthCallbacks = [];
         let _ws = null;
 
         function _connect() {
@@ -75,6 +76,8 @@ if (!window.api) {
                     _blockCallbacks.forEach(cb => cb({ id: msg.id, data: msg.data }));
                 } else if (msg.type === 'dr-initials-changed') {
                     _drCallbacks.forEach(cb => cb(msg.data));
+                } else if (msg.type === 'euth-checklist-changed') {
+                    _euthCallbacks.forEach(cb => cb(msg.data));
                 } else if (msg.type === 'full-state') {
                     if (msg.blocks) {
                         Object.entries(msg.blocks).forEach(([id, data]) => {
@@ -83,6 +86,9 @@ if (!window.api) {
                     }
                     if (msg.drInitials && Object.keys(msg.drInitials).length > 0) {
                         _drCallbacks.forEach(cb => cb(msg.drInitials));
+                    }
+                    if (msg.euthChecklist && Object.keys(msg.euthChecklist).length > 0) {
+                        _euthCallbacks.forEach(cb => cb(msg.euthChecklist));
                     }
                 }
             };
@@ -104,7 +110,13 @@ if (!window.api) {
                     _ws.send(JSON.stringify({ type: 'dr-initials-changed', data }));
                 }
             },
-            onDrInitialsChanged: (callback) => { _drCallbacks.push(callback); }
+            onDrInitialsChanged: (callback) => { _drCallbacks.push(callback); },
+            updateEuthChecklist: (data) => {
+                if (_ws && _ws.readyState === WebSocket.OPEN) {
+                    _ws.send(JSON.stringify({ type: 'euth-checklist-changed', data }));
+                }
+            },
+            onEuthChecklistChanged: (callback) => { _euthCallbacks.push(callback); }
         };
     } else {
         // Local file mode — use BroadcastChannel (same machine, cross-tab only)
@@ -115,7 +127,9 @@ if (!window.api) {
                 _channel.addEventListener('message', (event) => callback(event.data));
             },
             updateDrInitials: () => {},
-            onDrInitialsChanged: () => {}
+            onDrInitialsChanged: () => {},
+            updateEuthChecklist: () => {},
+            onEuthChecklistChanged: () => {}
         };
     }
 }
@@ -142,6 +156,7 @@ const redoStack = {};
 // Storage key for saving data
 const STORAGE_KEY = "whiteboard-data";
 const DR_STORAGE_KEY = "dr-initials-data";
+const EUTH_STORAGE_KEY = "euth-checklist-data";
 
 // Coordinates are stored as raw pixels relative to their containing block,
 // which is the same size in both editor and board, so no scaling is needed.
@@ -300,10 +315,43 @@ function initDrBoxMode() {
     });
 }
 
+// Save euthanasia checklist state
+function saveEuthChecklist() {
+    const data = {};
+    document.querySelectorAll(".euth-check").forEach(cb => {
+        data[cb.id] = cb.checked;
+    });
+    localStorage.setItem(EUTH_STORAGE_KEY, JSON.stringify(data));
+    window.postMessage({ type: "euth-checklist-changed", data }, "*");
+    if (window.api && window.api.updateEuthChecklist) {
+        window.api.updateEuthChecklist(data);
+    }
+}
+
+// Load euthanasia checklist state
+function loadEuthChecklist() {
+    try {
+        const saved = localStorage.getItem(EUTH_STORAGE_KEY);
+        if (saved) {
+            const data = JSON.parse(saved);
+            document.querySelectorAll(".euth-check").forEach(cb => {
+                if (data[cb.id] !== undefined) {
+                    cb.checked = data[cb.id];
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Error loading euthanasia checklist:", error);
+    }
+}
+
 // Listen for Dr. initials changes from other windows
 window.addEventListener("message", (event) => {
     if (event.data.type === "dr-initials-changed") {
         loadDrInitials();
+    }
+    if (event.data.type === "euth-checklist-changed") {
+        loadEuthChecklist();
     }
 });
 
@@ -323,6 +371,9 @@ window.addEventListener("storage", (event) => {
     }
     if (event.key === DR_STORAGE_KEY) {
         loadDrInitials();
+    }
+    if (event.key === EUTH_STORAGE_KEY) {
+        loadEuthChecklist();
     }
 });
 
@@ -1238,6 +1289,10 @@ window.addEventListener("load", () => {
         input.addEventListener("input", saveDrInitials);
         input.addEventListener("change", saveDrInitials);
     });
+
+    document.querySelectorAll(".euth-check").forEach(cb => {
+        cb.addEventListener("change", saveEuthChecklist);
+    });
     
     const savedData = loadSavedData();
     if (savedData) {
@@ -1251,6 +1306,7 @@ window.addEventListener("load", () => {
     }
     loadDrInitials();
     initDrBoxMode();
+    loadEuthChecklist();
 });
 
 window.api.onUpdateBlock((data) => {
@@ -1277,6 +1333,17 @@ if (window.api.onDrInitialsChanged) {
             }
         });
         localStorage.setItem(DR_STORAGE_KEY, JSON.stringify(data));
+    });
+}
+
+if (window.api.onEuthChecklistChanged) {
+    window.api.onEuthChecklistChanged((data) => {
+        document.querySelectorAll(".euth-check").forEach(cb => {
+            if (data[cb.id] !== undefined) {
+                cb.checked = data[cb.id];
+            }
+        });
+        localStorage.setItem(EUTH_STORAGE_KEY, JSON.stringify(data));
     });
 }
 

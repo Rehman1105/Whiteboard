@@ -8,10 +8,11 @@ const PORT = 3000;
 const DATA_FILE = path.join(__dirname, 'board-data.json');
 
 // --- Persisted state ---
-let state = { blocks: {}, drInitials: {} };
+let state = { blocks: {}, drInitials: {}, euthChecklist: {} };
 if (fs.existsSync(DATA_FILE)) {
     try {
         state = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        if (!state.euthChecklist) state.euthChecklist = {};
     } catch (e) {
         console.error('Could not load board-data.json, starting fresh:', e.message);
     }
@@ -69,7 +70,7 @@ const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
     // Send current full state to newly connected client
-    ws.send(JSON.stringify({ type: 'full-state', blocks: state.blocks, drInitials: state.drInitials }));
+    ws.send(JSON.stringify({ type: 'full-state', blocks: state.blocks, drInitials: state.drInitials, euthChecklist: state.euthChecklist }));
 
     ws.on('message', (raw) => {
         let msg;
@@ -88,6 +89,9 @@ wss.on('connection', (ws) => {
             }
         } else if (msg.type === 'dr-initials-changed') {
             Object.assign(state.drInitials, msg.data);
+            saveState();
+        } else if (msg.type === 'euth-checklist-changed') {
+            Object.assign(state.euthChecklist, msg.data);
             saveState();
         }
 
