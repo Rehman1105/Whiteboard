@@ -601,42 +601,31 @@ body {
 
 /* Euthanasia checklist */
 .euth-checklist {
-    padding: 5px 10px 6px;
+    flex: 1;
     background: #fff;
-    border-bottom: 2px solid #ccc;
-    flex-shrink: 0;
     position: relative;
     z-index: 5;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
 }
 
 .euth-item {
     display: flex;
     align-items: center;
-    gap: 7px;
+    justify-content: center;
+    gap: 10px;
     font-family: Arial, sans-serif;
-    font-size: 13px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    white-space: nowrap;
     user-select: none;
+    border: 1px solid #ccc;
 }
 
 .euth-item input[type="checkbox"] {
-    width: 15px;
-    height: 15px;
+    width: 22px;
+    height: 22px;
     cursor: pointer;
     flex-shrink: 0;
-}
-
-#euthanasia-square .block {
-    flex: 1;
-    height: auto;
-}
-
-#euthanasia-square .text-container {
-    top: 0;
-    height: 100%;
 }
