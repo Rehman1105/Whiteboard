@@ -557,6 +557,8 @@ function addListItem(id, x, y) {
     listContainer.className = "list-container selected";
     listContainer.style.left = x + "px";
     listContainer.style.top = y + "px";
+    listContainer.style.width = "150px";
+    listContainer.style.height = "60px";
 
     const listItem = document.createElement("div");
     listItem.className = "list-item editing";
@@ -1032,7 +1034,7 @@ function makeDraggable(element, blockId) {
             return;
         }
 
-        if (element.classList.contains("text-box")) {
+        if (element.classList.contains("text-box") || element.classList.contains("list-container")) {
             const rect = element.getBoundingClientRect();
             const margin = 5;
             const x = e.clientX - rect.left;
