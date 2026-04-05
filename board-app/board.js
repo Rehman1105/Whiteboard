@@ -827,10 +827,30 @@ function showContextMenu(e, element, blockId) {
         savedRange = selection.getRangeAt(0).cloneRange();
     }
 
+    // Re-enable editing and focus so that sel.addRange() is honored by the browser.
+    // Called immediately before restoring savedRange in font-size / color handlers.
+    function restoreEditing() {
+        if (element.classList.contains("text-box")) {
+            element.contentEditable = true;
+            element.classList.add("editing");
+            element.focus({ preventScroll: true });
+        } else if (element.classList.contains("list-container")) {
+            const label = element.querySelector(".list-label");
+            if (label) {
+                label.contentEditable = true;
+                label.focus({ preventScroll: true });
+            }
+        }
+    }
+
     const menu = document.createElement("div");
     menu.className = "context-menu";
     menu.style.left = e.clientX + "px";
     menu.style.top = e.clientY + "px";
+
+    // Prevent the menu from stealing focus so the text selection in the text box
+    // is not cleared when the user clicks menu items.
+    menu.addEventListener("mousedown", (e) => e.preventDefault());
 
     let menuOpen = true;
 
@@ -867,15 +887,16 @@ function showContextMenu(e, element, blockId) {
         sizeBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             if (savedRange) {
+                restoreEditing();
                 const sel = window.getSelection();
                 sel.removeAllRanges();
                 sel.addRange(savedRange.cloneRange());
                 applyFontSize(size);
-                sel.removeAllRanges();
-                sel.addRange(savedRange.cloneRange());
             }
             saveBlock(blockId);
             saveDataToStorage();
+            menuOpen = false;
+            menu.remove();
         });
         fontSizeSubmenu.appendChild(sizeBtn);
     });
@@ -924,15 +945,16 @@ function showContextMenu(e, element, blockId) {
             e.preventDefault();
             e.stopPropagation();
             if (savedRange) {
+                restoreEditing();
                 const sel = window.getSelection();
                 sel.removeAllRanges();
                 sel.addRange(savedRange.cloneRange());
                 applyFontColor(color);
-                sel.removeAllRanges();
-                sel.addRange(savedRange.cloneRange());
             }
             saveBlock(blockId);
             saveDataToStorage();
+            menuOpen = false;
+            menu.remove();
         });
         colorGrid.appendChild(colorOption);
     });
@@ -1286,7 +1308,7 @@ window.addEventListener("load", () => {
 
 window.api.onUpdateBlock((data) => {
     const { id, data: allData } = data;
-    if (allData !== undefined) {
+    if (Array.isArray(allData)) {
         undoStack[id] = allData.length > 0 ? [allData] : [];
         redrawBlock(id);
     }
