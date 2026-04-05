@@ -14,20 +14,11 @@ if (mode === "editor") {
             overflow: hidden;
         }
         
-        #toolbar {
-            flex-shrink: 0;
-            height: auto;
-        }
-        
         .board-container {
             width: 100% !important;
             margin: 0 !important;
             max-width: none !important;
             flex: 1;
-        }
-        
-        .top-bar {
-            height: 60px !important;
         }
         
         .left-box {

@@ -18,18 +18,12 @@ body {
 }
 
 #toolbar {
-    width: 100%;
-    background: #f0f0f0;
-    padding: 10px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
-    flex-wrap: wrap;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-bottom: 2px solid #ccc;
-    position: relative;
-    z-index: 100;
-    flex-shrink: 0;
+    flex-wrap: nowrap;
+    flex-shrink: 1;
+    min-width: 0;
 }
 
 #toolbar button {
@@ -147,22 +141,23 @@ body {
 
 .top-bar {
     border-bottom: 4px solid black;
-    padding: 10px;
-    text-align: right;
+    padding: 0 10px;
     font-weight: bold;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
     font-size: 20px;
-    height: 60px;
+    min-height: 60px;
+    gap: 12px;
+    overflow: visible;
 }
 
-.top-bar::before {
-    content: "In House Patients";
+.top-bar-title {
     font-weight: bold;
     color: #333;
-    margin-right: auto;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .row {
