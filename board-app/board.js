@@ -576,7 +576,7 @@ function addListItem(id, x, y) {
     const label = document.createElement("span");
     label.contentEditable = true;
     label.className = "list-label";
-    label.textContent = "List item";
+    label.textContent = "";
 
     listItem.appendChild(checkbox);
     listItem.appendChild(label);
