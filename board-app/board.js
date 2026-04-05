@@ -37,7 +37,7 @@ if (mode === "editor") {
         }
         
         .bottom-section {
-            height: 350px !important;
+            height: 300px !important;
             flex-shrink: 0;
         }
         
