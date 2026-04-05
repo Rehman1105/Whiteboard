@@ -30,11 +30,6 @@ if (mode === "editor") {
             height: 60px !important;
         }
         
-        .row {
-            height: 180px !important;
-            flex-shrink: 0;
-        }
-        
         .left-box {
             width: 200px !important;
             min-width: 200px !important;
@@ -148,62 +143,14 @@ const redoStack = {};
 const STORAGE_KEY = "whiteboard-data";
 const DR_STORAGE_KEY = "dr-initials-data";
 
-// Get board container dimensions for scaling calculations
-function getBoardContainerDimensions() {
-    const boardContainer = document.querySelector('.board-container');
-    if (!boardContainer) return { width: 1200, height: 800 };
-    
-    return {
-        width: boardContainer.offsetWidth,
-        height: boardContainer.offsetHeight
-    };
-}
-
-// Get scaling factor based on mode
+// Coordinates are stored as raw pixels relative to their containing block,
+// which is the same size in both editor and board, so no scaling is needed.
 function getScaleFactor() {
-    if (mode === "editor") {
-        const boardContainer = document.querySelector('.board-container');
-        if (!boardContainer) return 1;
-        
-        // Get the actual viewport/container size
-        const actualWidth = boardContainer.offsetWidth;
-        const actualHeight = boardContainer.offsetHeight;
-        
-        // Base dimensions (reference board view proportions)
-        // Board view: 5 rows @ 180px + top bar @ 60px + bottom section @ 350px = 1250px height
-        // Board view width varies but left-box is always 200px
-        const baseWidth = 1200;
-        const baseHeight = 1250;
-        
-        // Calculate scale factor
-        const scaleX = actualWidth / baseWidth;
-        const scaleY = actualHeight / baseHeight;
-        
-        // Use average to maintain aspect ratio
-        return (scaleX + scaleY) / 2;
-    }
     return 1;
 }
 
 function getInverseScaleFactor() {
-    return 1 / getScaleFactor();
-}
-
-// Recalculate on window resize
-if (mode === "editor") {
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            // Trigger redraw of all blocks to recalculate scaling
-            blocks.forEach(block => {
-                const id = block.dataset.id;
-                if (undoStack[id] && undoStack[id].length > 0) {
-                    redrawBlock(id);
-                }
-            });
-        }, 250);
-    });
+    return 1;
 }
 
 // Load saved data from localStorage
