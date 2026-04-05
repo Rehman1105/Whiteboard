@@ -590,6 +590,7 @@ function addListItem(id, x, y) {
     label.focus();
 
     label.addEventListener("blur", () => {
+        label.contentEditable = false;
         listItem.classList.remove("editing");
         if (label.textContent.trim() === "") {
             // Remove resize handles before removing element
@@ -786,6 +787,22 @@ function makeInteractive(element, blockId) {
             });
         }
         selectedElement = element;
+    });
+
+    // Double-click to enter edit mode
+    element.addEventListener("dblclick", (e) => {
+        e.stopPropagation(); // prevent textContainer dblclick from creating a new item
+        if (element.classList.contains("text-box")) {
+            element.contentEditable = true;
+            element.classList.add("editing");
+            element.focus();
+        } else if (element.classList.contains("list-container")) {
+            const label = element.querySelector(".list-label");
+            if (label) {
+                label.contentEditable = true;
+                label.focus();
+            }
+        }
     });
 
     // Right-click context menu
