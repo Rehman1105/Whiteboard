@@ -210,7 +210,7 @@ body {
 
 .bottom-section {
     display: flex;
-    height: 350px;
+    height: 200px;
     flex-shrink: 0;
     border-bottom: 4px solid black;
 }
