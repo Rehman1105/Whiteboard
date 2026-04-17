@@ -82,7 +82,7 @@ wss.on('connection', (ws) => {
         }
 
         if (msg.type === 'update-block') {
-            // Validate id is one of the known numeric block IDs (1–14)
+            // Validate id is one of the known numeric block IDs (1–16)
             const id = String(msg.id);
             if (/^(1[0-6]|[1-9])$/.test(id)) {
                 state.blocks[id] = msg.data;
