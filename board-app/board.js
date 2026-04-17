@@ -342,7 +342,7 @@ function loadPatientFields() {
 // Auto-resize a patient input based on its content
 function resizePatientInput(input) {
     const len = input.value.length;
-    const minCh = input.classList.contains("patient-weight") ? 4 : 5;
+    const minCh = input.classList.contains("patient-weight") ? 4 : 9;
     input.style.width = Math.max(minCh, len) + "ch";
 }
 
