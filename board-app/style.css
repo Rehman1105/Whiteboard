@@ -222,9 +222,9 @@ body {
 }
 
 .left-box .patient-weight {
-    min-width: 40px;
+    width: 90px;
+    min-width: 90px;
     max-width: 120px;
-    width: auto;
 }
 
 .left-box .patient-field:focus {
