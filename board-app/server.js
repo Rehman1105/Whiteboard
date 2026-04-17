@@ -8,11 +8,12 @@ const PORT = 3000;
 const DATA_FILE = path.join(__dirname, 'board-data.json');
 
 // --- Persisted state ---
-let state = { blocks: {}, drInitials: {}, euthChecklist: {} };
+let state = { blocks: {}, drInitials: {}, euthChecklist: {}, patientFields: {} };
 if (fs.existsSync(DATA_FILE)) {
     try {
         state = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
         if (!state.euthChecklist) state.euthChecklist = {};
+        if (!state.patientFields) state.patientFields = {};
     } catch (e) {
         console.error('Could not load board-data.json, starting fresh:', e.message);
     }
@@ -70,7 +71,7 @@ const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
     // Send current full state to newly connected client
-    ws.send(JSON.stringify({ type: 'full-state', blocks: state.blocks, drInitials: state.drInitials, euthChecklist: state.euthChecklist }));
+    ws.send(JSON.stringify({ type: 'full-state', blocks: state.blocks, drInitials: state.drInitials, euthChecklist: state.euthChecklist, patientFields: state.patientFields }));
 
     ws.on('message', (raw) => {
         let msg;
@@ -92,6 +93,9 @@ wss.on('connection', (ws) => {
             saveState();
         } else if (msg.type === 'euth-checklist-changed') {
             Object.assign(state.euthChecklist, msg.data);
+            saveState();
+        } else if (msg.type === 'patient-fields-changed') {
+            Object.assign(state.patientFields, msg.data);
             saveState();
         }
 

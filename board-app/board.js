@@ -53,6 +53,7 @@ if (!window.api) {
         const _blockCallbacks = [];
         const _drCallbacks = [];
         const _euthCallbacks = [];
+        const _patientCallbacks = [];
         let _ws = null;
 
         function _connect() {
@@ -69,6 +70,8 @@ if (!window.api) {
                     _drCallbacks.forEach(cb => cb(msg.data));
                 } else if (msg.type === 'euth-checklist-changed') {
                     _euthCallbacks.forEach(cb => cb(msg.data));
+                } else if (msg.type === 'patient-fields-changed') {
+                    _patientCallbacks.forEach(cb => cb(msg.data));
                 } else if (msg.type === 'full-state') {
                     if (msg.blocks) {
                         Object.entries(msg.blocks).forEach(([id, data]) => {
@@ -80,6 +83,9 @@ if (!window.api) {
                     }
                     if (msg.euthChecklist && Object.keys(msg.euthChecklist).length > 0) {
                         _euthCallbacks.forEach(cb => cb(msg.euthChecklist));
+                    }
+                    if (msg.patientFields && Object.keys(msg.patientFields).length > 0) {
+                        _patientCallbacks.forEach(cb => cb(msg.patientFields));
                     }
                 }
             };
@@ -107,7 +113,13 @@ if (!window.api) {
                     _ws.send(JSON.stringify({ type: 'euth-checklist-changed', data }));
                 }
             },
-            onEuthChecklistChanged: (callback) => { _euthCallbacks.push(callback); }
+            onEuthChecklistChanged: (callback) => { _euthCallbacks.push(callback); },
+            updatePatientFields: (data) => {
+                if (_ws && _ws.readyState === WebSocket.OPEN) {
+                    _ws.send(JSON.stringify({ type: 'patient-fields-changed', data }));
+                }
+            },
+            onPatientFieldsChanged: (callback) => { _patientCallbacks.push(callback); }
         };
     } else {
         // Local file mode — use BroadcastChannel (same machine, cross-tab only)
@@ -120,7 +132,9 @@ if (!window.api) {
             updateDrInitials: () => {},
             onDrInitialsChanged: () => {},
             updateEuthChecklist: () => {},
-            onEuthChecklistChanged: () => {}
+            onEuthChecklistChanged: () => {},
+            updatePatientFields: () => {},
+            onPatientFieldsChanged: () => {}
         };
     }
 }
@@ -148,6 +162,7 @@ const redoStack = {};
 const STORAGE_KEY = "whiteboard-data";
 const DR_STORAGE_KEY = "dr-initials-data";
 const EUTH_STORAGE_KEY = "euth-checklist-data";
+const PATIENT_FIELDS_STORAGE_KEY = "patient-fields-data";
 
 // Coordinates are stored as raw pixels relative to their containing block,
 // which is the same size in both editor and board, so no scaling is needed.
@@ -306,6 +321,82 @@ function initDrBoxMode() {
     });
 }
 
+// Save and sync left patient Name/Weight fields
+function savePatientFields() {
+    const patientFields = document.querySelectorAll(".patient-field");
+    const patientData = {};
+    patientFields.forEach(input => {
+        const id = input.dataset.id || input.id;
+        patientData[id] = input.value;
+
+        if (mode === "board") {
+            const span = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
+            if (span) {
+                span.textContent = input.value;
+            }
+        }
+    });
+
+    localStorage.setItem(PATIENT_FIELDS_STORAGE_KEY, JSON.stringify(patientData));
+
+    window.postMessage({ type: "patient-fields-changed", data: patientData }, "*");
+    if (window.api && window.api.updatePatientFields) {
+        window.api.updatePatientFields(patientData);
+    }
+}
+
+// Load left patient Name/Weight fields
+function loadPatientFields() {
+    try {
+        const savedData = localStorage.getItem(PATIENT_FIELDS_STORAGE_KEY);
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            const patientFields = document.querySelectorAll(".patient-field");
+            patientFields.forEach(input => {
+                const id = input.dataset.id || input.id;
+                if (data[id] !== undefined) {
+                    input.value = data[id];
+
+                    if (mode === "board") {
+                        const span = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
+                        if (span) {
+                            span.textContent = data[id];
+                        }
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Error loading patient fields:", error);
+    }
+}
+
+// Toggle left patient field inputs/spans per mode
+function initPatientFieldMode() {
+    const patientFields = document.querySelectorAll(".patient-field");
+    patientFields.forEach(input => {
+        const id = input.dataset.id || input.id;
+        if (mode === "board") {
+            input.disabled = true;
+            input.style.display = "none";
+
+            const span = document.createElement("span");
+            span.className = "patient-field-display";
+            span.dataset.for = id;
+            span.textContent = input.value;
+            input.parentElement.appendChild(span);
+        } else {
+            input.disabled = false;
+            input.style.display = "block";
+
+            const existingSpan = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
+            if (existingSpan) {
+                existingSpan.remove();
+            }
+        }
+    });
+}
+
 // Save euthanasia checklist state
 function saveEuthChecklist() {
     const data = {};
@@ -344,6 +435,9 @@ window.addEventListener("message", (event) => {
     if (event.data.type === "euth-checklist-changed") {
         loadEuthChecklist();
     }
+    if (event.data.type === "patient-fields-changed") {
+        loadPatientFields();
+    }
 });
 
 // Listen for block updates from other windows
@@ -365,6 +459,9 @@ window.addEventListener("storage", (event) => {
     }
     if (event.key === EUTH_STORAGE_KEY) {
         loadEuthChecklist();
+    }
+    if (event.key === PATIENT_FIELDS_STORAGE_KEY) {
+        loadPatientFields();
     }
 });
 
@@ -1303,6 +1400,11 @@ window.addEventListener("load", () => {
     document.querySelectorAll(".euth-check").forEach(cb => {
         cb.addEventListener("change", saveEuthChecklist);
     });
+
+    document.querySelectorAll(".patient-field").forEach(input => {
+        input.addEventListener("input", savePatientFields);
+        input.addEventListener("change", savePatientFields);
+    });
     
     const savedData = loadSavedData();
     if (savedData) {
@@ -1317,6 +1419,8 @@ window.addEventListener("load", () => {
     loadDrInitials();
     initDrBoxMode();
     loadEuthChecklist();
+    loadPatientFields();
+    initPatientFieldMode();
 });
 
 window.api.onUpdateBlock((data) => {
@@ -1354,6 +1458,23 @@ if (window.api.onEuthChecklistChanged) {
             }
         });
         localStorage.setItem(EUTH_STORAGE_KEY, JSON.stringify(data));
+    });
+}
+
+if (window.api.onPatientFieldsChanged) {
+    window.api.onPatientFieldsChanged((data) => {
+        const patientFields = document.querySelectorAll(".patient-field");
+        patientFields.forEach(input => {
+            const id = input.dataset.id || input.id;
+            if (data[id] !== undefined) {
+                input.value = data[id];
+                if (mode === "board") {
+                    const span = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
+                    if (span) span.textContent = data[id];
+                }
+            }
+        });
+        localStorage.setItem(PATIENT_FIELDS_STORAGE_KEY, JSON.stringify(data));
     });
 }
 
