@@ -389,24 +389,30 @@ function saveEuthChecklist() {
     updateEuthSquareColor();
 }
 
-// Update euthanasia square visibility and header colour based on in-progress state.
-// Board/view mode: hide the whole square when not checked; show with green header when checked.
-// Editor mode: square always visible, no colour, in-progress label visible.
+// Update euthanasia header colour and in-progress label visibility.
+// Board/view mode: square always visible; show "In Progress" label (text only, no checkbox)
+//   when checked and green header; hide label when unchecked.
+// Editor mode: square always visible, no colour, in-progress label with checkbox visible.
 function updateEuthSquareColor() {
-    const square = document.getElementById('euthanasia-square');
     const header = document.getElementById('euth-room-header');
-    if (!square || !header) return;
+    if (!header) return;
     const inProgress = document.getElementById('euth-in-progress');
+    const label = document.querySelector('.euth-in-progress-label');
     if (mode === 'board') {
         if (inProgress && inProgress.checked) {
-            square.style.display = '';
+            if (label) {
+                label.style.display = '';
+                // Hide the checkbox itself in view mode — only the text shows
+                inProgress.style.display = 'none';
+            }
             header.classList.add('euth-header-green');
         } else {
-            square.style.display = 'none';
+            if (label) label.style.display = 'none';
             header.classList.remove('euth-header-green');
         }
     } else {
-        square.style.display = '';
+        if (label) label.style.display = '';
+        if (inProgress) inProgress.style.display = '';
         header.classList.remove('euth-header-green');
     }
 }
@@ -1423,13 +1429,6 @@ window.addEventListener("load", () => {
     loadEuthChecklist();
     loadPatientFields();
     initPatientFieldMode();
-
-    // Hide in-progress checkbox label in board/view mode (it only controls visibility)
-    if (mode === 'board') {
-        document.querySelectorAll('.euth-in-progress-label').forEach(el => {
-            el.style.display = 'none';
-        });
-    }
 
     // Wire auto-resize to patient inputs (editor mode)
     document.querySelectorAll(".patient-field").forEach(input => {
