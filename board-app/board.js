@@ -250,14 +250,6 @@ function saveDrInitials() {
     drInitialsInputs.forEach(input => {
         const id = input.dataset.id || input.id;
         drData[id] = input.value;
-        
-        // Update display span in real-time if in board mode
-        if (mode === "board") {
-            const span = input.parentElement.querySelector(".dr-initials-display");
-            if (span) {
-                span.textContent = input.value;
-            }
-        }
     });
     localStorage.setItem(DR_STORAGE_KEY, JSON.stringify(drData));
     
@@ -279,14 +271,6 @@ function loadDrInitials() {
                 const id = input.dataset.id || input.id;
                 if (data[id] !== undefined) {
                     input.value = data[id];
-                    
-                    // Update display span in board mode
-                    if (mode === "board") {
-                        const span = input.parentElement.querySelector(".dr-initials-display");
-                        if (span) {
-                            span.textContent = data[id];
-                        }
-                    }
                 }
             });
         }
@@ -301,17 +285,14 @@ function initDrBoxMode() {
     drInitialsInputs.forEach(input => {
         if (mode === "board") {
             input.disabled = true;
-            input.style.display = "none";
-            // Create a span to show the text value
-            const span = document.createElement("span");
-            span.className = "dr-initials-display";
-            span.textContent = input.value;
-            span.style.fontSize = "16px";
-            span.style.fontWeight = "bold";
-            input.parentElement.appendChild(span);
+            // Remove any lingering display spans
+            const existingSpan = input.parentElement.querySelector(".dr-initials-display");
+            if (existingSpan) {
+                existingSpan.remove();
+            }
         } else {
             input.disabled = false;
-            input.style.display = "block";
+            input.style.display = "";
             // Remove any existing display spans in editor mode
             const existingSpan = input.parentElement.querySelector(".dr-initials-display");
             if (existingSpan) {
@@ -328,13 +309,6 @@ function savePatientFields() {
     patientFields.forEach(input => {
         const id = input.dataset.id || input.id;
         patientData[id] = input.value;
-
-        if (mode === "board") {
-            const span = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
-            if (span) {
-                span.textContent = input.value;
-            }
-        }
     });
 
     localStorage.setItem(PATIENT_FIELDS_STORAGE_KEY, JSON.stringify(patientData));
@@ -357,13 +331,6 @@ function loadPatientFields() {
                 if (data[id] !== undefined) {
                     input.value = data[id];
                     resizePatientInput(input);
-
-                    if (mode === "board") {
-                        const span = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
-                        if (span) {
-                            span.textContent = data[id];
-                        }
-                    }
                 }
             });
         }
@@ -386,35 +353,19 @@ function initPatientFieldMode() {
         const id = input.dataset.id || input.id;
         if (mode === "board") {
             input.disabled = true;
-            input.style.display = "none";
 
-            const span = document.createElement("span");
-            span.className = "patient-field-display";
-            span.dataset.for = id;
-            span.textContent = input.value;
-
-            // Insert before the lbs label if present so value appears before "lbs"
-            const lbsLabel = input.parentElement.querySelector(".lbs-label");
-            if (lbsLabel) {
-                input.parentElement.insertBefore(span, lbsLabel);
-                // Hide lbs label when weight has no value
-                lbsLabel.style.display = input.value.trim() ? "" : "none";
-            } else {
-                input.parentElement.appendChild(span);
-            }
-        } else {
-            input.disabled = false;
-            input.style.display = "block";
-
+            // Remove any lingering display spans from a previous session
             const existingSpan = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
             if (existingSpan) {
                 existingSpan.remove();
             }
+        } else {
+            input.disabled = false;
+            input.style.display = "";
 
-            // Always show lbs label in editor mode
-            const lbsLabel = input.parentElement.querySelector(".lbs-label");
-            if (lbsLabel) {
-                lbsLabel.style.display = "";
+            const existingSpan = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
+            if (existingSpan) {
+                existingSpan.remove();
             }
         }
     });
@@ -1469,10 +1420,6 @@ if (window.api.onDrInitialsChanged) {
             const id = input.dataset.id || input.id;
             if (data[id] !== undefined) {
                 input.value = data[id];
-                if (mode === "board") {
-                    const span = input.parentElement.querySelector(".dr-initials-display");
-                    if (span) span.textContent = data[id];
-                }
             }
         });
         localStorage.setItem(DR_STORAGE_KEY, JSON.stringify(data));

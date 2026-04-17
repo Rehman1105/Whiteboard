@@ -199,7 +199,7 @@ body {
 }
 
 .lbs-label {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
     color: #333;
     white-space: nowrap;
@@ -208,7 +208,7 @@ body {
 .left-box .patient-field {
     border: 2px solid #333;
     padding: 4px 8px;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
     border-radius: 3px;
     background: white;
@@ -235,10 +235,10 @@ body {
 }
 
 .left-box .patient-field:disabled {
-    background: #f9f9f9;
+    background: white;
     color: #333;
-    cursor: not-allowed;
-    border-color: #999;
+    cursor: default;
+    border-color: #333;
 }
 
 .patient-field-display {
@@ -630,10 +630,10 @@ body {
     padding: 4px 8px;
     font-size: 16px;
     font-weight: bold;
-    width: 60px;
     border-radius: 3px;
     background: white;
     text-align: center;
+    cursor: pointer;
 }
 
 .room-header .dr-initials:focus {
@@ -644,10 +644,10 @@ body {
 }
 
 .room-header .dr-initials:disabled {
-    background: #f9f9f9;
+    background: white;
     color: #333;
-    cursor: not-allowed;
-    border-color: #999;
+    cursor: default;
+    border-color: #333;
 }
 
 /* Adjust text-container so it doesn't cover header */
