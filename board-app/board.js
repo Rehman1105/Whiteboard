@@ -389,22 +389,25 @@ function saveEuthChecklist() {
     updateEuthSquareColor();
 }
 
-// Update euthanasia square background: red in board mode, green if in-progress is checked,
-// no color in editor mode.
+// Update euthanasia square visibility and header colour based on in-progress state.
+// Board/view mode: hide the whole square when not checked; show with green header when checked.
+// Editor mode: square always visible, no colour, in-progress label visible.
 function updateEuthSquareColor() {
     const square = document.getElementById('euthanasia-square');
-    if (!square) return;
+    const header = document.getElementById('euth-room-header');
+    if (!square || !header) return;
+    const inProgress = document.getElementById('euth-in-progress');
     if (mode === 'board') {
-        const inProgress = document.getElementById('euth-in-progress');
         if (inProgress && inProgress.checked) {
-            square.classList.remove('euth-red');
-            square.classList.add('euth-green');
+            square.style.display = '';
+            header.classList.add('euth-header-green');
         } else {
-            square.classList.remove('euth-green');
-            square.classList.add('euth-red');
+            square.style.display = 'none';
+            header.classList.remove('euth-header-green');
         }
     } else {
-        square.classList.remove('euth-red', 'euth-green');
+        square.style.display = '';
+        header.classList.remove('euth-header-green');
     }
 }
 
@@ -1421,9 +1424,9 @@ window.addEventListener("load", () => {
     loadPatientFields();
     initPatientFieldMode();
 
-    // Hide in-progress checkbox in board mode (it only controls view-tab colour)
+    // Hide in-progress checkbox label in board/view mode (it only controls visibility)
     if (mode === 'board') {
-        document.querySelectorAll('.euth-in-progress-item').forEach(el => {
+        document.querySelectorAll('.euth-in-progress-label').forEach(el => {
             el.style.display = 'none';
         });
     }
