@@ -675,6 +675,19 @@ body {
     gap: 0;
 }
 
+#euthanasia-square.euth-red {
+    background: #ff6b6b;
+}
+
+#euthanasia-square.euth-green {
+    background: #6bcb77;
+}
+
+#euthanasia-square.euth-red .euth-checklist,
+#euthanasia-square.euth-green .euth-checklist {
+    background: transparent;
+}
+
 .euth-item {
     display: flex;
     align-items: center;

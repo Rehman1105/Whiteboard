@@ -386,6 +386,26 @@ function saveEuthChecklist() {
     if (window.api && window.api.updateEuthChecklist) {
         window.api.updateEuthChecklist(data);
     }
+    updateEuthSquareColor();
+}
+
+// Update euthanasia square background: red in board mode, green if in-progress is checked,
+// no color in editor mode.
+function updateEuthSquareColor() {
+    const square = document.getElementById('euthanasia-square');
+    if (!square) return;
+    if (mode === 'board') {
+        const inProgress = document.getElementById('euth-in-progress');
+        if (inProgress && inProgress.checked) {
+            square.classList.remove('euth-red');
+            square.classList.add('euth-green');
+        } else {
+            square.classList.remove('euth-green');
+            square.classList.add('euth-red');
+        }
+    } else {
+        square.classList.remove('euth-red', 'euth-green');
+    }
 }
 
 // Load euthanasia checklist state
@@ -403,6 +423,7 @@ function loadEuthChecklist() {
     } catch (error) {
         console.error("Error loading euthanasia checklist:", error);
     }
+    updateEuthSquareColor();
 }
 
 // Listen for Dr. initials changes from other windows
@@ -1400,6 +1421,13 @@ window.addEventListener("load", () => {
     loadPatientFields();
     initPatientFieldMode();
 
+    // Hide in-progress checkbox in board mode (it only controls view-tab colour)
+    if (mode === 'board') {
+        document.querySelectorAll('.euth-in-progress-item').forEach(el => {
+            el.style.display = 'none';
+        });
+    }
+
     // Wire auto-resize to patient inputs (editor mode)
     document.querySelectorAll(".patient-field").forEach(input => {
         resizePatientInput(input);
@@ -1438,6 +1466,7 @@ if (window.api.onEuthChecklistChanged) {
             }
         });
         localStorage.setItem(EUTH_STORAGE_KEY, JSON.stringify(data));
+        updateEuthSquareColor();
     });
 }
 
