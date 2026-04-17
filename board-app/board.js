@@ -377,12 +377,28 @@ function initPatientFieldMode() {
 
 // Save euthanasia checklist state
 function saveEuthChecklist() {
+    const inProgress = document.getElementById('euth-in-progress');
     const data = {};
-    document.querySelectorAll(".euth-check").forEach(cb => {
-        data[cb.id] = cb.checked;
-    });
-    const nameInput = document.getElementById('euth-name');
-    if (nameInput) data['euth-name'] = nameInput.value;
+
+    // If unchecking In Progress, clear all other items and the name
+    if (inProgress && !inProgress.checked) {
+        document.querySelectorAll(".euth-check").forEach(cb => {
+            cb.checked = false;
+            data[cb.id] = false;
+        });
+        const nameInput = document.getElementById('euth-name');
+        if (nameInput) {
+            nameInput.value = '';
+        }
+        data['euth-name'] = '';
+    } else {
+        document.querySelectorAll(".euth-check").forEach(cb => {
+            data[cb.id] = cb.checked;
+        });
+        const nameInput = document.getElementById('euth-name');
+        if (nameInput) data['euth-name'] = nameInput.value;
+    }
+
     localStorage.setItem(EUTH_STORAGE_KEY, JSON.stringify(data));
     window.postMessage({ type: "euth-checklist-changed", data }, "*");
     if (window.api && window.api.updateEuthChecklist) {

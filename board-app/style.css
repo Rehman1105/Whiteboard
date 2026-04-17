@@ -653,10 +653,10 @@ body {
 /* Adjust text-container so it doesn't cover header */
 .square .text-container {
     position: absolute;
-    top: 50px;
+    top: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - 50px);
+    height: 100%;
 }
 
 .dr-initials-display {
@@ -708,8 +708,8 @@ body {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 14px;
-    font-weight: normal;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
     white-space: nowrap;
 }
