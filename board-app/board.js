@@ -397,6 +397,8 @@ function initPatientFieldMode() {
             const lbsLabel = input.parentElement.querySelector(".lbs-label");
             if (lbsLabel) {
                 input.parentElement.insertBefore(span, lbsLabel);
+                // Hide lbs label when weight has no value
+                lbsLabel.style.display = input.value.trim() ? "" : "none";
             } else {
                 input.parentElement.appendChild(span);
             }
@@ -407,6 +409,12 @@ function initPatientFieldMode() {
             const existingSpan = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
             if (existingSpan) {
                 existingSpan.remove();
+            }
+
+            // Always show lbs label in editor mode
+            const lbsLabel = input.parentElement.querySelector(".lbs-label");
+            if (lbsLabel) {
+                lbsLabel.style.display = "";
             }
         }
     });
