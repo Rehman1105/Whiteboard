@@ -665,6 +665,31 @@ body {
 }
 
 /* Euthanasia checklist */
+.euth-name-input {
+    border: 2px solid #333;
+    padding: 4px 8px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 3px;
+    background: white;
+    text-align: center;
+    width: 120px;
+    box-sizing: border-box;
+}
+
+.euth-name-input:focus {
+    outline: none;
+    border-color: #0066cc;
+    background: #fffacd;
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.5);
+}
+
+#euthanasia-square.euth-locked .euth-name-input,
+#euthanasia-square.euth-locked .euth-checklist {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
 .euth-checklist {
     flex: 1;
     background: #fff;

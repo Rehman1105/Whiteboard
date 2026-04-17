@@ -381,6 +381,8 @@ function saveEuthChecklist() {
     document.querySelectorAll(".euth-check").forEach(cb => {
         data[cb.id] = cb.checked;
     });
+    const nameInput = document.getElementById('euth-name');
+    if (nameInput) data['euth-name'] = nameInput.value;
     localStorage.setItem(EUTH_STORAGE_KEY, JSON.stringify(data));
     window.postMessage({ type: "euth-checklist-changed", data }, "*");
     if (window.api && window.api.updateEuthChecklist) {
@@ -396,8 +398,19 @@ function saveEuthChecklist() {
 function updateEuthSquareColor() {
     const header = document.getElementById('euth-room-header');
     if (!header) return;
+    const square = document.getElementById('euthanasia-square');
     const inProgress = document.getElementById('euth-in-progress');
     const label = document.querySelector('.euth-in-progress-label');
+
+    // Toggle locked state: everything except the In Progress label is greyed out when unchecked
+    if (square) {
+        if (inProgress && inProgress.checked) {
+            square.classList.remove('euth-locked');
+        } else {
+            square.classList.add('euth-locked');
+        }
+    }
+
     if (mode === 'board') {
         if (inProgress && inProgress.checked) {
             if (label) {
@@ -428,6 +441,10 @@ function loadEuthChecklist() {
                     cb.checked = data[cb.id];
                 }
             });
+            const nameInput = document.getElementById('euth-name');
+            if (nameInput && data['euth-name'] !== undefined) {
+                nameInput.value = data['euth-name'];
+            }
         }
     } catch (error) {
         console.error("Error loading euthanasia checklist:", error);
@@ -1409,6 +1426,12 @@ window.addEventListener("load", () => {
         cb.addEventListener("change", saveEuthChecklist);
     });
 
+    const euthNameInput = document.getElementById('euth-name');
+    if (euthNameInput) {
+        euthNameInput.addEventListener("input", saveEuthChecklist);
+        euthNameInput.addEventListener("change", saveEuthChecklist);
+    }
+
     document.querySelectorAll(".patient-field").forEach(input => {
         input.addEventListener("input", savePatientFields);
         input.addEventListener("change", savePatientFields);
@@ -1467,6 +1490,10 @@ if (window.api.onEuthChecklistChanged) {
                 cb.checked = data[cb.id];
             }
         });
+        const nameInput = document.getElementById('euth-name');
+        if (nameInput && data['euth-name'] !== undefined) {
+            nameInput.value = data['euth-name'];
+        }
         localStorage.setItem(EUTH_STORAGE_KEY, JSON.stringify(data));
         updateEuthSquareColor();
     });
