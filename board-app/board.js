@@ -272,6 +272,11 @@ function loadDrInitials() {
                 if (data[id] !== undefined) {
                     input.value = data[id];
                 }
+                // Keep display span in sync when in board mode
+                if (mode === "board") {
+                    const span = input.parentElement.querySelector(".dr-initials-display");
+                    if (span) span.textContent = input.value || "--";
+                }
             });
         }
     } catch (error) {
@@ -279,25 +284,23 @@ function loadDrInitials() {
     }
 }
 
-// Disable Dr. box in view mode
+// Hide/show Dr. dropdown per mode; show plain text in board mode
 function initDrBoxMode() {
     const drInitialsInputs = document.querySelectorAll(".dr-initials");
-    drInitialsInputs.forEach(input => {
+    drInitialsInputs.forEach(select => {
         if (mode === "board") {
-            input.disabled = true;
-            // Remove any lingering display spans
-            const existingSpan = input.parentElement.querySelector(".dr-initials-display");
-            if (existingSpan) {
-                existingSpan.remove();
+            select.style.display = "none";
+            let span = select.parentElement.querySelector(".dr-initials-display");
+            if (!span) {
+                span = document.createElement("span");
+                span.className = "dr-initials-display";
+                select.parentElement.appendChild(span);
             }
+            span.textContent = select.value || "--";
         } else {
-            input.disabled = false;
-            input.style.display = "";
-            // Remove any existing display spans in editor mode
-            const existingSpan = input.parentElement.querySelector(".dr-initials-display");
-            if (existingSpan) {
-                existingSpan.remove();
-            }
+            select.style.display = "";
+            const span = select.parentElement.querySelector(".dr-initials-display");
+            if (span) span.remove();
         }
     });
 }
@@ -339,10 +342,11 @@ function loadPatientFields() {
     }
 }
 
-// Auto-resize a patient input based on its content
+// Auto-resize a patient input based on its content (weight only; name fills full width via CSS)
 function resizePatientInput(input) {
+    if (input.classList.contains("patient-name")) return;
     const len = input.value.length;
-    const minCh = input.classList.contains("patient-weight") ? 4 : 9;
+    const minCh = 4;
     input.style.width = Math.max(minCh, len) + "ch";
 }
 
