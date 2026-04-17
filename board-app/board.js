@@ -356,6 +356,7 @@ function loadPatientFields() {
                 const id = input.dataset.id || input.id;
                 if (data[id] !== undefined) {
                     input.value = data[id];
+                    resizePatientInput(input);
 
                     if (mode === "board") {
                         const span = input.parentElement.querySelector(`.patient-field-display[data-for="${id}"]`);
@@ -369,6 +370,13 @@ function loadPatientFields() {
     } catch (error) {
         console.error("Error loading patient fields:", error);
     }
+}
+
+// Auto-resize a patient input based on its content
+function resizePatientInput(input) {
+    const len = input.value.length;
+    const minCh = input.classList.contains("patient-weight") ? 4 : 5;
+    input.style.width = Math.max(minCh, len) + "ch";
 }
 
 // Toggle left patient field inputs/spans per mode
@@ -1428,6 +1436,12 @@ window.addEventListener("load", () => {
     loadEuthChecklist();
     loadPatientFields();
     initPatientFieldMode();
+
+    // Wire auto-resize to patient inputs (editor mode)
+    document.querySelectorAll(".patient-field").forEach(input => {
+        resizePatientInput(input);
+        input.addEventListener("input", () => resizePatientInput(input));
+    });
 });
 
 window.api.onUpdateBlock((data) => {
