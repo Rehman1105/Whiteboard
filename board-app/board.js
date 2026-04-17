@@ -384,7 +384,14 @@ function initPatientFieldMode() {
             span.className = "patient-field-display";
             span.dataset.for = id;
             span.textContent = input.value;
-            input.parentElement.appendChild(span);
+
+            // Insert before the lbs label if present so value appears before "lbs"
+            const lbsLabel = input.parentElement.querySelector(".lbs-label");
+            if (lbsLabel) {
+                input.parentElement.insertBefore(span, lbsLabel);
+            } else {
+                input.parentElement.appendChild(span);
+            }
         } else {
             input.disabled = false;
             input.style.display = "block";
