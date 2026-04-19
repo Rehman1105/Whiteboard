@@ -1,6 +1,13 @@
 const params = new URLSearchParams(window.location.search);
 const mode = params.get("mode");
 
+// Set tab title based on mode
+if (mode === "board") {
+    document.title = "Whiteboard - View";
+} else if (mode === "editor") {
+    document.title = "Whiteboard - Edit";
+}
+
 // Hide toolbar in board mode
 if (mode === "board") {
     document.getElementById("toolbar").style.display = "none";
