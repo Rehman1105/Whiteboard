@@ -4,6 +4,9 @@ const mode = params.get("mode");
 // Hide toolbar in board mode
 if (mode === "board") {
     document.getElementById("toolbar").style.display = "none";
+    document.querySelectorAll(".room-clear-btn").forEach(btn => {
+        btn.style.display = "none";
+    });
 }
 
 // Apply editor-specific styles - Match the view-only board proportions exactly

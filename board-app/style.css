@@ -620,7 +620,8 @@ body {
 }
 
 .room-header .room-clear-btn {
-    margin-right: auto;
+    position: absolute;
+    left: 10px;
     background: #e05252;
     color: white;
     border: none;
