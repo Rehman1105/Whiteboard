@@ -1606,6 +1606,33 @@ window.clearBlock = function() {
     saveDataToStorage();
 };
 
+// Room clear buttons — wipe text content, reset Dr. dropdown, and sync
+document.querySelectorAll(".room-clear-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.block;
+
+        // Clear the block's text/list content
+        undoStack[id] = [[]];
+        redoStack[id] = [];
+        redrawBlock(id);
+        if (window.api && window.api.updateBlock) {
+            window.api.updateBlock({ id, data: [] });
+        }
+
+        // Reset Dr. dropdown for this room
+        const drSelect = document.querySelector(`.dr-initials[data-id="room${id.slice(-1)}-dr"]`);
+        if (drSelect) {
+            drSelect.value = "";
+            saveDrInitials();
+            initDrBoxMode();
+        }
+
+        saveDataToStorage();
+    });
+});
+
+
 const dateElement = document.getElementById("currentDate");
 
 if (dateElement) {

@@ -619,10 +619,27 @@ body {
     flex-shrink: 0;
 }
 
-.room-header span {
-    white-space: nowrap;
-    font-size: 18px;
+.room-header .room-clear-btn {
+    margin-right: auto;
+    background: #e05252;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
     font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+    padding: 0;
+}
+
+.room-header .room-clear-btn:hover {
+    background: #c0392b;
 }
 
 .room-header .dr-initials {
