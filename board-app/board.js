@@ -438,15 +438,11 @@ function updateEuthSquareColor() {
     }
 
     if (mode === 'board') {
+        if (label) label.style.display = '';
+        if (inProgress) inProgress.style.display = '';
         if (inProgress && inProgress.checked) {
-            if (label) {
-                label.style.display = '';
-                // Hide the checkbox itself in view mode — only the text shows
-                inProgress.style.display = 'none';
-            }
             header.classList.add('euth-header-green');
         } else {
-            if (label) label.style.display = 'none';
             header.classList.remove('euth-header-green');
         }
     } else {
