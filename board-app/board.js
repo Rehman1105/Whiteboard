@@ -1622,6 +1622,8 @@ document.querySelectorAll(".room-clear-btn").forEach(btn => {
         e.stopPropagation();
         const id = btn.dataset.block;
 
+        if (!confirm("This will clear all room info. Are you sure?")) return;
+
         // Clear the block's text/list content
         undoStack[id] = [[]];
         redoStack[id] = [];
