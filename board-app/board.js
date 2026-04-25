@@ -418,9 +418,9 @@ function saveEuthChecklist() {
 }
 
 // Update euthanasia header colour and in-progress label visibility.
-// Board/view mode: square always visible; show "In Progress" label (text only, no checkbox)
-//   when checked and green header; hide label when unchecked.
-// Editor mode: square always visible, no colour, in-progress label with checkbox visible.
+// Board/view mode: square is read-only (pointer-events: none); shows green header and "In Progress"
+//   text when checked, hides label when unchecked.
+// Editor mode: square is fully interactive; in-progress label with checkbox always visible.
 function updateEuthSquareColor() {
     const header = document.getElementById('euth-room-header');
     if (!header) return;
@@ -438,14 +438,18 @@ function updateEuthSquareColor() {
     }
 
     if (mode === 'board') {
-        if (label) label.style.display = '';
-        if (inProgress) inProgress.style.display = '';
+        // Board/view mode: square is read-only — hide all interactive controls
+        if (square) square.style.pointerEvents = 'none';
         if (inProgress && inProgress.checked) {
+            if (label) label.style.display = '';
+            inProgress.style.display = 'none';
             header.classList.add('euth-header-green');
         } else {
+            if (label) label.style.display = 'none';
             header.classList.remove('euth-header-green');
         }
     } else {
+        if (square) square.style.pointerEvents = '';
         if (label) label.style.display = '';
         if (inProgress) inProgress.style.display = '';
         header.classList.remove('euth-header-green');
