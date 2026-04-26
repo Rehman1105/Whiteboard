@@ -18,18 +18,12 @@ body {
 }
 
 #toolbar {
-    width: 100%;
-    background: #f0f0f0;
-    padding: 10px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
-    flex-wrap: wrap;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-bottom: 2px solid #ccc;
-    position: relative;
-    z-index: 100;
-    flex-shrink: 0;
+    flex-wrap: nowrap;
+    flex-shrink: 1;
+    min-width: 0;
 }
 
 #toolbar button {
@@ -147,29 +141,40 @@ body {
 
 .top-bar {
     border-bottom: 4px solid black;
-    padding: 10px;
-    text-align: right;
+    padding: 0 10px;
     font-weight: bold;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
     font-size: 20px;
-    height: 60px;
+    min-height: 60px;
+    gap: 12px;
+    overflow: visible;
 }
 
-.top-bar::before {
-    content: "In House Patients";
+.top-bar-title {
     font-weight: bold;
     color: #333;
-    margin-right: auto;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.top-bar-reason {
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-left: 3px solid #333;
+    padding-left: 12px;
+    margin-left: 8px;
 }
 
 .row {
     display: flex;
     border-bottom: 4px solid black;
-    height: 180px;
-    flex-shrink: 0;
+    flex: 1;
+    min-height: 60px;
 }
 
 .left-box {
@@ -180,6 +185,76 @@ body {
     align-items: center;
     justify-content: center;
     background: white;
+}
+
+.left-box .patient-fields {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+}
+
+.left-box .patient-name-row {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+}
+
+.left-box .weight-row {
+    position: absolute;
+    top: 46px;
+    left: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.lbs-label {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+}
+
+.left-box .patient-field {
+    border: 2px solid #333;
+    padding: 4px 8px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 3px;
+    background: white;
+    text-align: center;
+}
+
+.left-box .patient-name {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.left-box .patient-weight {
+    width: 90px;
+    min-width: 90px;
+    max-width: 120px;
+}
+
+.left-box .patient-field:focus {
+    outline: none;
+    border-color: #0066cc;
+    background: #fffacd;
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.5);
+}
+
+.left-box .patient-field:disabled {
+    background: white;
+    color: #333;
+    cursor: default;
+    border-color: #333;
+}
+
+.patient-field-display {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
 }
 
 .left-box .block {
@@ -210,7 +285,7 @@ body {
 
 .bottom-section {
     display: flex;
-    height: 350px;
+    height: 300px;
     flex-shrink: 0;
     border-bottom: 4px solid black;
 }
@@ -554,10 +629,28 @@ body {
     flex-shrink: 0;
 }
 
-.room-header span {
-    white-space: nowrap;
-    font-size: 18px;
+.room-header .room-clear-btn {
+    position: absolute;
+    left: 10px;
+    background: #e05252;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
     font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+    padding: 0;
+}
+
+.room-header .room-clear-btn:hover {
+    background: #c0392b;
 }
 
 .room-header .dr-initials {
@@ -565,10 +658,10 @@ body {
     padding: 4px 8px;
     font-size: 16px;
     font-weight: bold;
-    width: 60px;
     border-radius: 3px;
     background: white;
     text-align: center;
+    cursor: pointer;
 }
 
 .room-header .dr-initials:focus {
@@ -579,22 +672,92 @@ body {
 }
 
 .room-header .dr-initials:disabled {
-    background: #f9f9f9;
+    background: white;
     color: #333;
-    cursor: not-allowed;
-    border-color: #999;
+    cursor: default;
+    border-color: #333;
 }
 
 /* Adjust text-container so it doesn't cover header */
 .square .text-container {
     position: absolute;
-    top: 50px;
+    top: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - 50px);
+    height: 100%;
 }
 
 .dr-initials-display {
     font-size: 18px !important;
     font-weight: bold;
+}
+
+/* Euthanasia checklist */
+.euth-name-input {
+    border: 2px solid #333;
+    padding: 4px 8px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 3px;
+    background: white;
+    text-align: center;
+    width: 120px;
+    box-sizing: border-box;
+}
+
+.euth-name-input:focus {
+    outline: none;
+    border-color: #0066cc;
+    background: #fffacd;
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.5);
+}
+
+#euthanasia-square.euth-locked .euth-name-input,
+#euthanasia-square.euth-locked .euth-checklist {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.euth-checklist {
+    flex: 1;
+    background: #fff;
+    position: relative;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+}
+
+#euth-room-header.euth-header-green {
+    background: #6bcb77;
+}
+
+.euth-in-progress-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.euth-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid #ccc;
+}
+
+.euth-item input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    flex-shrink: 0;
 }

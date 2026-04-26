@@ -7,65 +7,137 @@
 </head>
 <body>
 
-<div id="toolbar">
-    <button draggable="true" data-tool="text">Text</button>
-    <button draggable="true" data-tool="list">Add List</button>
-    <label>Font Size: <input type="number" id="fontSize" value="30" min="8" max="32" onchange="window.setFontSize(this.value)"></label>
-    <div class="toolbar-color-container">
-        <button id="toolbarColorBtn" type="button">Font Color</button>
-        <div class="toolbar-color-grid">
-            <div class="color-option" style="background-color: #000000;" title="#000000"></div>
-            <div class="color-option" style="background-color: #FFFFFF; border: 2px solid #333;" title="#FFFFFF"></div>
-            <div class="color-option" style="background-color: #FF0000;" title="#FF0000"></div>
-            <div class="color-option" style="background-color: #00FF00;" title="#00FF00"></div>
-            <div class="color-option" style="background-color: #0000FF;" title="#0000FF"></div>
-            <div class="color-option" style="background-color: #FFFF00;" title="#FFFF00"></div>
-            <div class="color-option" style="background-color: #FF00FF;" title="#FF00FF"></div>
-            <div class="color-option" style="background-color: #00FFFF;" title="#00FFFF"></div>
-            <div class="color-option" style="background-color: #FFA500;" title="#FFA500"></div>
-            <div class="color-option" style="background-color: #800080;" title="#800080"></div>
-            <div class="color-option" style="background-color: #FFC0CB;" title="#FFC0CB"></div>
-            <div class="color-option" style="background-color: #A52A2A;" title="#A52A2A"></div>
-            <div class="color-option" style="background-color: #808080;" title="#808080"></div>
-            <div class="color-option" style="background-color: #FFD700;" title="#FFD700"></div>
-            <div class="color-option" style="background-color: #008000;" title="#008000"></div>
-            <div class="color-option" style="background-color: #0000CD;" title="#0000CD"></div>
-        </div>
-    </div>
-    <button onclick="window.clearBlock()">Clear Block</button>
-</div>
-
 <div class="board-container">
 
     <!-- Top Date Bar -->
     <div class="top-bar">
+        <span class="top-bar-title">In House Patients</span>
+        <span class="top-bar-reason">Reason for Hospitalization</span>
+        <div id="toolbar">
+            <button draggable="true" data-tool="text">Text</button>
+            <button draggable="true" data-tool="list">Add List</button>
+            <label>Font Size: <input type="number" id="fontSize" value="30" min="8" max="32" onchange="window.setFontSize(this.value)"></label>
+            <div class="toolbar-color-container">
+                <button id="toolbarColorBtn" type="button">Font Color</button>
+                <div class="toolbar-color-grid">
+                    <div class="color-option" style="background-color: #000000;" title="#000000"></div>
+                    <div class="color-option" style="background-color: #FFFFFF; border: 2px solid #333;" title="#FFFFFF"></div>
+                    <div class="color-option" style="background-color: #FF0000;" title="#FF0000"></div>
+                    <div class="color-option" style="background-color: #00FF00;" title="#00FF00"></div>
+                    <div class="color-option" style="background-color: #0000FF;" title="#0000FF"></div>
+                    <div class="color-option" style="background-color: #FFFF00;" title="#FFFF00"></div>
+                    <div class="color-option" style="background-color: #FF00FF;" title="#FF00FF"></div>
+                    <div class="color-option" style="background-color: #00FFFF;" title="#00FFFF"></div>
+                    <div class="color-option" style="background-color: #FFA500;" title="#FFA500"></div>
+                    <div class="color-option" style="background-color: #800080;" title="#800080"></div>
+                    <div class="color-option" style="background-color: #FFC0CB;" title="#FFC0CB"></div>
+                    <div class="color-option" style="background-color: #A52A2A;" title="#A52A2A"></div>
+                    <div class="color-option" style="background-color: #808080;" title="#808080"></div>
+                    <div class="color-option" style="background-color: #FFD700;" title="#FFD700"></div>
+                    <div class="color-option" style="background-color: #008000;" title="#008000"></div>
+                    <div class="color-option" style="background-color: #0000CD;" title="#0000CD"></div>
+                </div>
+            </div>
+            <button onclick="window.clearBlock()">Clear Block</button>
+        </div>
         <span id="currentDate"></span>
     </div>
 
     <!-- 5 Main Rows -->
     <div class="row">
-        <div class="block left-box" data-id="1"><div class="text-container"></div></div>
+        <div class="block left-box" data-id="1">
+            <div class="patient-fields">
+                <div class="patient-name-row">
+                    <input type="text" class="patient-field patient-name" id="patient-1-name" data-id="patient-1-name">
+                </div>
+                <div class="weight-row">
+                    <input type="text" class="patient-field patient-weight" id="patient-1-weight" data-id="patient-1-weight">
+                    <span class="lbs-label">lbs</span>
+                </div>
+            </div>
+            <div class="text-container"></div>
+        </div>
         <div class="block editable" data-id="2"><div class="text-container"></div></div>
     </div>
 
     <div class="row">
-        <div class="block left-box" data-id="3"><div class="text-container"></div></div>
+        <div class="block left-box" data-id="3">
+            <div class="patient-fields">
+                <div class="patient-name-row">
+                    <input type="text" class="patient-field patient-name" id="patient-2-name" data-id="patient-2-name">
+                </div>
+                <div class="weight-row">
+                    <input type="text" class="patient-field patient-weight" id="patient-2-weight" data-id="patient-2-weight">
+                    <span class="lbs-label">lbs</span>
+                </div>
+            </div>
+            <div class="text-container"></div>
+        </div>
         <div class="block editable" data-id="4"><div class="text-container"></div></div>
     </div>
 
     <div class="row">
-        <div class="block left-box" data-id="5"><div class="text-container"></div></div>
+        <div class="block left-box" data-id="5">
+            <div class="patient-fields">
+                <div class="patient-name-row">
+                    <input type="text" class="patient-field patient-name" id="patient-3-name" data-id="patient-3-name">
+                </div>
+                <div class="weight-row">
+                    <input type="text" class="patient-field patient-weight" id="patient-3-weight" data-id="patient-3-weight">
+                    <span class="lbs-label">lbs</span>
+                </div>
+            </div>
+            <div class="text-container"></div>
+        </div>
         <div class="block editable" data-id="6"><div class="text-container"></div></div>
     </div>
 
     <div class="row">
-        <div class="block left-box" data-id="7"><div class="text-container"></div></div>
+        <div class="block left-box" data-id="7">
+            <div class="patient-fields">
+                <div class="patient-name-row">
+                    <input type="text" class="patient-field patient-name" id="patient-4-name" data-id="patient-4-name">
+                </div>
+                <div class="weight-row">
+                    <input type="text" class="patient-field patient-weight" id="patient-4-weight" data-id="patient-4-weight">
+                    <span class="lbs-label">lbs</span>
+                </div>
+            </div>
+            <div class="text-container"></div>
+        </div>
         <div class="block editable" data-id="8"><div class="text-container"></div></div>
     </div>
 
     <div class="row">
-        <div class="block left-box" data-id="9"><div class="text-container"></div></div>
+        <div class="block left-box" data-id="9">
+            <div class="patient-fields">
+                <div class="patient-name-row">
+                    <input type="text" class="patient-field patient-name" id="patient-5-name" data-id="patient-5-name">
+                </div>
+                <div class="weight-row">
+                    <input type="text" class="patient-field patient-weight" id="patient-5-weight" data-id="patient-5-weight">
+                    <span class="lbs-label">lbs</span>
+                </div>
+            </div>
+            <div class="text-container"></div>
+        </div>
         <div class="block editable" data-id="10"><div class="text-container"></div></div>
+    </div>
+
+    <div class="row">
+        <div class="block left-box" data-id="15">
+            <div class="patient-fields">
+                <div class="patient-name-row">
+                    <input type="text" class="patient-field patient-name" id="patient-6-name" data-id="patient-6-name">
+                </div>
+                <div class="weight-row">
+                    <input type="text" class="patient-field patient-weight" id="patient-6-weight" data-id="patient-6-weight">
+                    <span class="lbs-label">lbs</span>
+                </div>
+            </div>
+            <div class="text-container"></div>
+        </div>
+        <div class="block editable" data-id="16"><div class="text-container"></div></div>
     </div>
 
     <!-- Bottom Room Section -->
@@ -73,8 +145,18 @@
 
         <div class="square" data-id="11">
             <div class="room-header">
+                <button class="room-clear-btn" data-block="11" title="Clear Room 1">✕</button>
                 <span>Room 1 - Dr.</span>
-                <input type="text" class="dr-initials" id="room1-dr" data-id="room1-dr" maxlength="3">
+                <select class="dr-initials" id="room1-dr" data-id="room1-dr">
+                    <option value="">--</option>
+                    <option value="Nep">Nep</option>
+                    <option value="Arian">Arian</option>
+                    <option value="Jaber">Jaber</option>
+                    <option value="Hussain">Hussain</option>
+                    <option value="Malovec">Malovec</option>
+                    <option value="Sarao">Sarao</option>
+                    <option value="Kaur">Kaur</option>
+                </select>
             </div>
             <div class="block" data-id="11">
                 <div class="text-container"></div>
@@ -83,8 +165,18 @@
 
         <div class="square" data-id="12">
             <div class="room-header">
+                <button class="room-clear-btn" data-block="12" title="Clear Room 2">✕</button>
                 <span>Room 2 - Dr.</span>
-                <input type="text" class="dr-initials" id="room2-dr" data-id="room2-dr" maxlength="3">
+                <select class="dr-initials" id="room2-dr" data-id="room2-dr">
+                    <option value="">--</option>
+                    <option value="Nep">Nep</option>
+                    <option value="Arian">Arian</option>
+                    <option value="Jaber">Jaber</option>
+                    <option value="Hussain">Hussain</option>
+                    <option value="Malovec">Malovec</option>
+                    <option value="Sarao">Sarao</option>
+                    <option value="Kaur">Kaur</option>
+                </select>
             </div>
             <div class="block" data-id="12">
                 <div class="text-container"></div>
@@ -93,20 +185,37 @@
 
         <div class="square" data-id="13">
             <div class="room-header">
+                <button class="room-clear-btn" data-block="13" title="Clear Room 3">✕</button>
                 <span>Room 3 - Dr.</span>
-                <input type="text" class="dr-initials" id="room3-dr" data-id="room3-dr" maxlength="3">
+                <select class="dr-initials" id="room3-dr" data-id="room3-dr">
+                    <option value="">--</option>
+                    <option value="Nep">Nep</option>
+                    <option value="Arian">Arian</option>
+                    <option value="Jaber">Jaber</option>
+                    <option value="Hussain">Hussain</option>
+                    <option value="Malovec">Malovec</option>
+                    <option value="Sarao">Sarao</option>
+                    <option value="Kaur">Kaur</option>
+                </select>
             </div>
             <div class="block" data-id="13">
                 <div class="text-container"></div>
             </div>
         </div>
 
-        <div class="square" data-id="14">
-            <div class="room-header">
+        <div class="square" id="euthanasia-square" data-id="14">
+            <div class="room-header" id="euth-room-header">
                 <span>Euthanasia</span>
+                <input type="text" id="euth-name" class="euth-name-input" placeholder="Name">
+                <label class="euth-in-progress-label"><input type="checkbox" id="euth-in-progress" class="euth-check"> In Progress</label>
             </div>
-            <div class="block" data-id="14">
-                <div class="text-container"></div>
+            <div class="euth-checklist">
+                <label class="euth-item"><input type="checkbox" id="euth-consent" class="euth-check"> Consent</label>
+                <label class="euth-item"><input type="checkbox" id="euth-sedation" class="euth-check"> Sedation</label>
+                <label class="euth-item"><input type="checkbox" id="euth-payment" class="euth-check"> Payment</label>
+                <label class="euth-item"><input type="checkbox" id="euth-ivc" class="euth-check"> IVC</label>
+                <label class="euth-item"><input type="checkbox" id="euth-air-tuffs" class="euth-check"> Hair Tuffs</label>
+                <label class="euth-item"><input type="checkbox" id="euth-paw-prints" class="euth-check"> Paw Prints</label>
             </div>
         </div>
 
