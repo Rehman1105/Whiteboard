@@ -160,6 +160,28 @@ body {
     flex-shrink: 0;
 }
 
+.column-headers {
+    display: flex;
+    border-bottom: 4px solid black;
+    flex-shrink: 0;
+}
+
+.col-header-left {
+    width: 200px;
+    min-width: 200px;
+    border-right: 4px solid black;
+    flex-shrink: 0;
+}
+
+.col-header-right {
+    flex: 1;
+    padding: 6px 12px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
 .row {
     display: flex;
     border-bottom: 4px solid black;
