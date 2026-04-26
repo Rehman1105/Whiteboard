@@ -141,15 +141,32 @@ body {
 
 .top-bar {
     border-bottom: 4px solid black;
-    padding: 0 10px;
     font-weight: bold;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
     flex-shrink: 0;
     font-size: 20px;
     min-height: 60px;
+    overflow: visible;
+}
+
+.top-bar-left {
+    width: 200px;
+    min-width: 200px;
+    flex-shrink: 0;
+    border-right: 4px solid black;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.top-bar-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
     gap: 12px;
+    padding: 0 10px;
+    justify-content: space-between;
     overflow: visible;
 }
 
@@ -157,7 +174,6 @@ body {
     font-weight: bold;
     color: #333;
     white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .top-bar-reason {
@@ -165,9 +181,6 @@ body {
     color: #333;
     white-space: nowrap;
     flex-shrink: 0;
-    border-left: 3px solid #333;
-    padding-left: 12px;
-    margin-left: 8px;
 }
 
 .row {

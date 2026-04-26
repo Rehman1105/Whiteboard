@@ -11,36 +11,40 @@
 
     <!-- Top Date Bar -->
     <div class="top-bar">
-        <span class="top-bar-title">In House Patients</span>
-        <span class="top-bar-reason">Reason for Hospitalization</span>
-        <div id="toolbar">
-            <button draggable="true" data-tool="text">Text</button>
-            <button draggable="true" data-tool="list">Add List</button>
-            <label>Font Size: <input type="number" id="fontSize" value="30" min="8" max="32" onchange="window.setFontSize(this.value)"></label>
-            <div class="toolbar-color-container">
-                <button id="toolbarColorBtn" type="button">Font Color</button>
-                <div class="toolbar-color-grid">
-                    <div class="color-option" style="background-color: #000000;" title="#000000"></div>
-                    <div class="color-option" style="background-color: #FFFFFF; border: 2px solid #333;" title="#FFFFFF"></div>
-                    <div class="color-option" style="background-color: #FF0000;" title="#FF0000"></div>
-                    <div class="color-option" style="background-color: #00FF00;" title="#00FF00"></div>
-                    <div class="color-option" style="background-color: #0000FF;" title="#0000FF"></div>
-                    <div class="color-option" style="background-color: #FFFF00;" title="#FFFF00"></div>
-                    <div class="color-option" style="background-color: #FF00FF;" title="#FF00FF"></div>
-                    <div class="color-option" style="background-color: #00FFFF;" title="#00FFFF"></div>
-                    <div class="color-option" style="background-color: #FFA500;" title="#FFA500"></div>
-                    <div class="color-option" style="background-color: #800080;" title="#800080"></div>
-                    <div class="color-option" style="background-color: #FFC0CB;" title="#FFC0CB"></div>
-                    <div class="color-option" style="background-color: #A52A2A;" title="#A52A2A"></div>
-                    <div class="color-option" style="background-color: #808080;" title="#808080"></div>
-                    <div class="color-option" style="background-color: #FFD700;" title="#FFD700"></div>
-                    <div class="color-option" style="background-color: #008000;" title="#008000"></div>
-                    <div class="color-option" style="background-color: #0000CD;" title="#0000CD"></div>
-                </div>
-            </div>
-            <button onclick="window.clearBlock()">Clear Block</button>
+        <div class="top-bar-left">
+            <span class="top-bar-title">In House Patients</span>
         </div>
-        <span id="currentDate"></span>
+        <div class="top-bar-right">
+            <span class="top-bar-reason">Reason for Hospitalization</span>
+            <div id="toolbar">
+                <button draggable="true" data-tool="text">Text</button>
+                <button draggable="true" data-tool="list">Add List</button>
+                <label>Font Size: <input type="number" id="fontSize" value="30" min="8" max="32" onchange="window.setFontSize(this.value)"></label>
+                <div class="toolbar-color-container">
+                    <button id="toolbarColorBtn" type="button">Font Color</button>
+                    <div class="toolbar-color-grid">
+                        <div class="color-option" style="background-color: #000000;" title="#000000"></div>
+                        <div class="color-option" style="background-color: #FFFFFF; border: 2px solid #333;" title="#FFFFFF"></div>
+                        <div class="color-option" style="background-color: #FF0000;" title="#FF0000"></div>
+                        <div class="color-option" style="background-color: #00FF00;" title="#00FF00"></div>
+                        <div class="color-option" style="background-color: #0000FF;" title="#0000FF"></div>
+                        <div class="color-option" style="background-color: #FFFF00;" title="#FFFF00"></div>
+                        <div class="color-option" style="background-color: #FF00FF;" title="#FF00FF"></div>
+                        <div class="color-option" style="background-color: #00FFFF;" title="#00FFFF"></div>
+                        <div class="color-option" style="background-color: #FFA500;" title="#FFA500"></div>
+                        <div class="color-option" style="background-color: #800080;" title="#800080"></div>
+                        <div class="color-option" style="background-color: #FFC0CB;" title="#FFC0CB"></div>
+                        <div class="color-option" style="background-color: #A52A2A;" title="#A52A2A"></div>
+                        <div class="color-option" style="background-color: #808080;" title="#808080"></div>
+                        <div class="color-option" style="background-color: #FFD700;" title="#FFD700"></div>
+                        <div class="color-option" style="background-color: #008000;" title="#008000"></div>
+                        <div class="color-option" style="background-color: #0000CD;" title="#0000CD"></div>
+                    </div>
+                </div>
+                <button onclick="window.clearBlock()">Clear Block</button>
+            </div>
+            <span id="currentDate"></span>
+        </div>
     </div>
 
     <!-- 5 Main Rows -->
