@@ -768,6 +768,14 @@ body {
     border: 1px solid #ccc;
 }
 
+.euth-item.euth-item-in-progress {
+    background: #ff9b9b;
+}
+
+.euth-item.euth-item-complete {
+    background: #6bcb77;
+}
+
 .euth-item input[type="checkbox"] {
     width: 22px;
     height: 22px;

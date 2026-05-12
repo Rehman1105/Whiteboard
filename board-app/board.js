@@ -417,6 +417,25 @@ function saveEuthChecklist() {
     updateEuthSquareColor();
 }
 
+function updateEuthChecklistItemColors() {
+    const inProgress = document.getElementById('euth-in-progress');
+    const items = document.querySelectorAll('.euth-checklist .euth-item');
+    const isInProgress = Boolean(inProgress && inProgress.checked);
+
+    items.forEach(item => {
+        const checkbox = item.querySelector('input.euth-check');
+        item.classList.remove('euth-item-in-progress', 'euth-item-complete');
+
+        if (!isInProgress || !checkbox) return;
+
+        if (checkbox.checked) {
+            item.classList.add('euth-item-complete');
+        } else {
+            item.classList.add('euth-item-in-progress');
+        }
+    });
+}
+
 // Update euthanasia header colour and in-progress label visibility.
 // Board/view mode: square is read-only (pointer-events: none); shows green header and "In Progress"
 //   text when checked, hides label when unchecked.
@@ -436,6 +455,7 @@ function updateEuthSquareColor() {
             square.classList.add('euth-locked');
         }
     }
+    updateEuthChecklistItemColors();
 
     if (mode === 'board') {
         // Board/view mode: square is read-only — hide all interactive controls
