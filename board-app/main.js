@@ -18,6 +18,7 @@ function createWindows() {
     boardWindow.loadFile('board.html', {
         query: { mode: "board" }
     });
+    boardWindow.maximize();
 
 
     // Editor Window (Interactive)
@@ -33,6 +34,7 @@ function createWindows() {
     editorWindow.loadFile('board.html', {
         query: { mode: "editor" }
     });
+    editorWindow.maximize();
 }
 
 app.whenReady().then(createWindows);
