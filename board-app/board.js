@@ -309,7 +309,7 @@ function initEditHistoryUI() {
 }
 
 // Clean and save data to localStorage
-function saveDataToStorage(action = "Board updated") {
+function saveDataToStorage(action = "Board updated", shouldTrackEdit = true) {
     try {
         const allBlocksData = {};
         blocks.forEach(block => {
@@ -358,7 +358,9 @@ function saveDataToStorage(action = "Board updated") {
         });
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(allBlocksData));
-        addEditHistory(action);
+        if (shouldTrackEdit && action) {
+            addEditHistory(action);
+        }
     } catch (error) {
         console.error("Error saving data to storage:", error);
     }
@@ -1631,7 +1633,7 @@ window.api.onUpdateBlock((data) => {
         undoStack[id] = allData.length > 0 ? [allData] : [];
         redrawBlock(id);
     }
-    saveDataToStorage();
+    saveDataToStorage("Board updated", false);
 });
 
 if (window.api.onDrInitialsChanged) {
