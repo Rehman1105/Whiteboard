@@ -173,6 +173,10 @@ const STORAGE_KEY = "whiteboard-data";
 const DR_STORAGE_KEY = "dr-initials-data";
 const EUTH_STORAGE_KEY = "euth-checklist-data";
 const PATIENT_FIELDS_STORAGE_KEY = "patient-fields-data";
+const EDIT_HISTORY_KEY = "edit-history-data";
+const EDIT_HISTORY_LIMIT = 30;
+
+let lastEditStateSignature = "";
 
 // Coordinates are stored as raw pixels relative to their containing block,
 // which is the same size in both editor and board, so no scaling is needed.
@@ -198,8 +202,104 @@ function loadSavedData() {
     return null;
 }
 
+function getCurrentStateSignature() {
+    return JSON.stringify({
+        blocks: localStorage.getItem(STORAGE_KEY) || "",
+        dr: localStorage.getItem(DR_STORAGE_KEY) || "",
+        euth: localStorage.getItem(EUTH_STORAGE_KEY) || "",
+        patients: localStorage.getItem(PATIENT_FIELDS_STORAGE_KEY) || ""
+    });
+}
+
+function renderEditHistory() {
+    const list = document.getElementById("editHistoryList");
+    if (!list) return;
+
+    list.innerHTML = "";
+    let history = [];
+    try {
+        history = JSON.parse(localStorage.getItem(EDIT_HISTORY_KEY) || "[]");
+    } catch (error) {
+        console.error("Error reading edit history:", error);
+        history = [];
+    }
+
+    if (history.length === 0) {
+        const empty = document.createElement("li");
+        empty.textContent = "No edits yet.";
+        list.appendChild(empty);
+        return;
+    }
+
+    history.forEach(entry => {
+        const item = document.createElement("li");
+        item.textContent = `${entry.time} — ${entry.action}`;
+        list.appendChild(item);
+    });
+}
+
+function addEditHistory(action) {
+    const signature = getCurrentStateSignature();
+    if (signature === lastEditStateSignature) return;
+    lastEditStateSignature = signature;
+
+    let history = [];
+    try {
+        history = JSON.parse(localStorage.getItem(EDIT_HISTORY_KEY) || "[]");
+        if (!Array.isArray(history)) history = [];
+    } catch (error) {
+        console.error("Error parsing edit history:", error);
+        history = [];
+    }
+
+    const time = new Date().toLocaleString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        month: "short",
+        day: "numeric"
+    });
+
+    history.unshift({ time, action });
+    if (history.length > EDIT_HISTORY_LIMIT) {
+        history = history.slice(0, EDIT_HISTORY_LIMIT);
+    }
+
+    localStorage.setItem(EDIT_HISTORY_KEY, JSON.stringify(history));
+    renderEditHistory();
+}
+
+function setEditHistoryPanelOpen(open) {
+    const panel = document.getElementById("editHistoryPanel");
+    if (!panel) return;
+    panel.classList.toggle("open", open);
+    panel.setAttribute("aria-hidden", String(!open));
+}
+
+function initEditHistoryUI() {
+    const button = document.getElementById("editHistoryBtn");
+    const panel = document.getElementById("editHistoryPanel");
+    const closeBtn = document.getElementById("editHistoryCloseBtn");
+    if (!button || !panel || !closeBtn) return;
+
+    button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = panel.classList.contains("open");
+        setEditHistoryPanelOpen(!isOpen);
+        if (!isOpen) renderEditHistory();
+    });
+
+    closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setEditHistoryPanelOpen(false);
+    });
+
+    panel.addEventListener("click", (e) => e.stopPropagation());
+    renderEditHistory();
+}
+
 // Clean and save data to localStorage
-function saveDataToStorage() {
+function saveDataToStorage(action = "Board updated") {
     try {
         const allBlocksData = {};
         blocks.forEach(block => {
@@ -248,13 +348,14 @@ function saveDataToStorage() {
         });
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(allBlocksData));
+        addEditHistory(action);
     } catch (error) {
         console.error("Error saving data to storage:", error);
     }
 }
 
 // Save and sync Dr. initials
-function saveDrInitials() {
+function saveDrInitials(action = "Updated doctor assignment") {
     const drInitialsInputs = document.querySelectorAll(".dr-initials");
     const drData = {};
     drInitialsInputs.forEach(input => {
@@ -268,6 +369,7 @@ function saveDrInitials() {
     if (window.api && window.api.updateDrInitials) {
         window.api.updateDrInitials(drData);
     }
+    addEditHistory(action);
 }
 
 // Load Dr. initials
@@ -316,7 +418,7 @@ function initDrBoxMode() {
 }
 
 // Save and sync left patient Name/Weight fields
-function savePatientFields() {
+function savePatientFields(action = "Updated patient details") {
     const patientFields = document.querySelectorAll(".patient-field");
     const patientData = {};
     patientFields.forEach(input => {
@@ -330,6 +432,7 @@ function savePatientFields() {
     if (window.api && window.api.updatePatientFields) {
         window.api.updatePatientFields(patientData);
     }
+    addEditHistory(action);
 }
 
 // Load left patient Name/Weight fields
@@ -386,7 +489,7 @@ function initPatientFieldMode() {
 }
 
 // Save euthanasia checklist state
-function saveEuthChecklist() {
+function saveEuthChecklist(action = "Updated euthanasia checklist") {
     const inProgress = document.getElementById('euth-in-progress');
     const data = {};
 
@@ -415,6 +518,7 @@ function saveEuthChecklist() {
         window.api.updateEuthChecklist(data);
     }
     updateEuthSquareColor();
+    addEditHistory(action);
 }
 
 function updateEuthChecklistItemColors() {
@@ -1462,6 +1566,8 @@ function redrawBlock(id) {
 
 // Load saved data on page load
 window.addEventListener("load", () => {
+    initEditHistoryUI();
+
     const drInitialsInputs = document.querySelectorAll(".dr-initials");
     drInitialsInputs.forEach(input => {
         input.addEventListener("input", saveDrInitials);
@@ -1504,6 +1610,9 @@ window.addEventListener("load", () => {
         resizePatientInput(input);
         input.addEventListener("input", () => resizePatientInput(input));
     });
+
+    lastEditStateSignature = getCurrentStateSignature();
+    setEditHistoryPanelOpen(false);
 });
 
 window.api.onUpdateBlock((data) => {
@@ -1608,6 +1717,9 @@ document.addEventListener("click", (e) => {
     }
     
     deselectAll();
+    if (!e.target.closest("#editHistoryPanel") && !e.target.closest("#editHistoryBtn")) {
+        setEditHistoryPanelOpen(false);
+    }
 });
 
 window.setTool = function(selectedTool) {

@@ -43,6 +43,7 @@
                 </div>
                 <button onclick="window.clearBlock()">Clear Block</button>
             </div>
+            <button id="editHistoryBtn" type="button">Edit History</button>
             <span id="currentDate"></span>
         </div>
     </div>
@@ -225,6 +226,14 @@
 
     </div>
 
+</div>
+
+<div id="editHistoryPanel" class="edit-history-panel" aria-hidden="true">
+    <div class="edit-history-header">
+        <span>Edit History</span>
+        <button id="editHistoryCloseBtn" type="button" aria-label="Close edit history">✕</button>
+    </div>
+    <ul id="editHistoryList" class="edit-history-list"></ul>
 </div>
 
 <script src="board.js"></script>
