@@ -175,6 +175,7 @@ const EUTH_STORAGE_KEY = "euth-checklist-data";
 const PATIENT_FIELDS_STORAGE_KEY = "patient-fields-data";
 const EDIT_HISTORY_KEY = "edit-history-data";
 const EDIT_HISTORY_LIMIT = 30;
+const EDIT_HISTORY_TEXT_MAX_LENGTH = 80;
 
 let lastEditStateSignature = "";
 
@@ -267,6 +268,15 @@ function addEditHistory(action) {
 
     localStorage.setItem(EDIT_HISTORY_KEY, JSON.stringify(history));
     renderEditHistory();
+}
+
+function getTextEditHistoryAction(prefix, rawText) {
+    const text = (rawText || "").replace(/\s+/g, " ").trim();
+    if (!text) return prefix;
+    const truncated = text.length > EDIT_HISTORY_TEXT_MAX_LENGTH
+        ? `${text.slice(0, EDIT_HISTORY_TEXT_MAX_LENGTH)}…`
+        : text;
+    return `${prefix}: "${truncated}"`;
 }
 
 function setEditHistoryPanelOpen(open) {
@@ -816,7 +826,7 @@ function addTextBox(id, x, y) {
             saveDataToStorage();
         } else {
             saveBlock(id);
-            saveDataToStorage();
+            saveDataToStorage(getTextEditHistoryAction("Updated text", textBox.textContent));
         }
     });
 }
@@ -873,7 +883,7 @@ function addListItem(id, x, y) {
             saveDataToStorage();
         } else {
             saveBlock(id);
-            saveDataToStorage();
+            saveDataToStorage(getTextEditHistoryAction("Updated list item", label.textContent));
         }
     });
 }
@@ -1504,7 +1514,7 @@ function redrawBlock(id) {
                         saveDataToStorage();
                     } else {
                         saveBlock(id);
-                        saveDataToStorage();
+                        saveDataToStorage(getTextEditHistoryAction("Updated text", textBox.textContent));
                     }
                 });
             } else {
@@ -1543,7 +1553,7 @@ function redrawBlock(id) {
                     label.addEventListener("blur", () => {
                         label.contentEditable = false;
                         saveBlock(id);
-                        saveDataToStorage();
+                        saveDataToStorage(getTextEditHistoryAction("Updated list item", label.textContent));
                     });
                 }
 
