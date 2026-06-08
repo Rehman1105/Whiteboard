@@ -1,17 +1,41 @@
 {
-  "name": "board-app",
+  "name": "whiteboard",
   "version": "1.0.0",
-  "description": "",
+  "description": "Vet clinic whiteboard",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "node server.js",
+    "build": "electron-builder --win"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
   "devDependencies": {
-    "electron": "^latest"
+    "electron": "^34.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.vetclinic.whiteboard",
+    "productName": "Whiteboard",
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false
+    },
+    "files": [
+      "main.js",
+      "board.html",
+      "board.js",
+      "style.css",
+      "package.json"
+    ],
+    "extraResources": []
   }
 }
