@@ -41,6 +41,8 @@
                         <div class="color-option" style="background-color: #0000CD;" title="#0000CD"></div>
                     </div>
                 </div>
+                <button id="undoBtn" onclick="window.undoCurrentBlock()" title="Undo (Ctrl+Z)">↩ Undo</button>
+                <button id="redoBtn" onclick="window.redoCurrentBlock()" title="Redo (Ctrl+Y)">↪ Redo</button>
                 <button onclick="window.clearBlock()">Clear Block</button>
             </div>
             <button id="editHistoryBtn" type="button">Edit History</button>
@@ -55,9 +57,15 @@
                 <div class="patient-name-row">
                     <input type="text" class="patient-field patient-name" id="patient-1-name" data-id="patient-1-name">
                 </div>
-                <div class="weight-row">
-                    <input type="text" class="patient-field patient-weight" id="patient-1-weight" data-id="patient-1-weight">
-                    <span class="lbs-label">lbs</span>
+                <div class="species-row">
+                    <select class="patient-field patient-species" id="patient-1-species" data-id="patient-1-species">
+                        <option value="">--</option>
+                        <option value="Canine">Canine</option>
+                        <option value="Feline">Feline</option>
+                    </select>
+                    <button type="button" class="kennel-btn" data-patient="1">K: --</button>
+                    <input type="hidden" class="patient-field kennel-field" id="patient-1-kennel" data-id="patient-1-kennel" value="">
+                    <div class="kennel-grid" id="kennel-grid-1" style="display:none;"></div>
                 </div>
             </div>
             <div class="text-container"></div>
@@ -71,9 +79,15 @@
                 <div class="patient-name-row">
                     <input type="text" class="patient-field patient-name" id="patient-2-name" data-id="patient-2-name">
                 </div>
-                <div class="weight-row">
-                    <input type="text" class="patient-field patient-weight" id="patient-2-weight" data-id="patient-2-weight">
-                    <span class="lbs-label">lbs</span>
+                <div class="species-row">
+                    <select class="patient-field patient-species" id="patient-2-species" data-id="patient-2-species">
+                        <option value="">--</option>
+                        <option value="Canine">Canine</option>
+                        <option value="Feline">Feline</option>
+                    </select>
+                    <button type="button" class="kennel-btn" data-patient="2">K: --</button>
+                    <input type="hidden" class="patient-field kennel-field" id="patient-2-kennel" data-id="patient-2-kennel" value="">
+                    <div class="kennel-grid" id="kennel-grid-2" style="display:none;"></div>
                 </div>
             </div>
             <div class="text-container"></div>
@@ -87,9 +101,15 @@
                 <div class="patient-name-row">
                     <input type="text" class="patient-field patient-name" id="patient-3-name" data-id="patient-3-name">
                 </div>
-                <div class="weight-row">
-                    <input type="text" class="patient-field patient-weight" id="patient-3-weight" data-id="patient-3-weight">
-                    <span class="lbs-label">lbs</span>
+                <div class="species-row">
+                    <select class="patient-field patient-species" id="patient-3-species" data-id="patient-3-species">
+                        <option value="">--</option>
+                        <option value="Canine">Canine</option>
+                        <option value="Feline">Feline</option>
+                    </select>
+                    <button type="button" class="kennel-btn" data-patient="3">K: --</button>
+                    <input type="hidden" class="patient-field kennel-field" id="patient-3-kennel" data-id="patient-3-kennel" value="">
+                    <div class="kennel-grid" id="kennel-grid-3" style="display:none;"></div>
                 </div>
             </div>
             <div class="text-container"></div>
@@ -103,9 +123,15 @@
                 <div class="patient-name-row">
                     <input type="text" class="patient-field patient-name" id="patient-4-name" data-id="patient-4-name">
                 </div>
-                <div class="weight-row">
-                    <input type="text" class="patient-field patient-weight" id="patient-4-weight" data-id="patient-4-weight">
-                    <span class="lbs-label">lbs</span>
+                <div class="species-row">
+                    <select class="patient-field patient-species" id="patient-4-species" data-id="patient-4-species">
+                        <option value="">--</option>
+                        <option value="Canine">Canine</option>
+                        <option value="Feline">Feline</option>
+                    </select>
+                    <button type="button" class="kennel-btn" data-patient="4">K: --</button>
+                    <input type="hidden" class="patient-field kennel-field" id="patient-4-kennel" data-id="patient-4-kennel" value="">
+                    <div class="kennel-grid" id="kennel-grid-4" style="display:none;"></div>
                 </div>
             </div>
             <div class="text-container"></div>
@@ -121,9 +147,15 @@
                         <div class="patient-name-row">
                             <input type="text" class="patient-field patient-name" id="patient-5-name" data-id="patient-5-name">
                         </div>
-                        <div class="weight-row">
-                            <input type="text" class="patient-field patient-weight" id="patient-5-weight" data-id="patient-5-weight">
-                            <span class="lbs-label">lbs</span>
+                        <div class="species-row">
+                            <select class="patient-field patient-species" id="patient-5-species" data-id="patient-5-species">
+                                <option value="">--</option>
+                                <option value="Canine">Canine</option>
+                                <option value="Feline">Feline</option>
+                            </select>
+                            <button type="button" class="kennel-btn" data-patient="5">K: --</button>
+                            <input type="hidden" class="patient-field kennel-field" id="patient-5-kennel" data-id="patient-5-kennel" value="">
+                            <div class="kennel-grid" id="kennel-grid-5" style="display:none;"></div>
                         </div>
                     </div>
                     <div class="text-container"></div>
@@ -136,9 +168,15 @@
                         <div class="patient-name-row">
                             <input type="text" class="patient-field patient-name" id="patient-6-name" data-id="patient-6-name">
                         </div>
-                        <div class="weight-row">
-                            <input type="text" class="patient-field patient-weight" id="patient-6-weight" data-id="patient-6-weight">
-                            <span class="lbs-label">lbs</span>
+                        <div class="species-row">
+                            <select class="patient-field patient-species" id="patient-6-species" data-id="patient-6-species">
+                                <option value="">--</option>
+                                <option value="Canine">Canine</option>
+                                <option value="Feline">Feline</option>
+                            </select>
+                            <button type="button" class="kennel-btn" data-patient="6">K: --</button>
+                            <input type="hidden" class="patient-field kennel-field" id="patient-6-kennel" data-id="patient-6-kennel" value="">
+                            <div class="kennel-grid" id="kennel-grid-6" style="display:none;"></div>
                         </div>
                     </div>
                     <div class="text-container"></div>

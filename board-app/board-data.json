@@ -35,215 +35,205 @@
     "patient-5-name": "",
     "patient-5-weight": "",
     "patient-6-name": "",
-    "patient-6-weight": ""
+    "patient-6-weight": "",
+    "patient-1-species": "",
+    "patient-2-species": "",
+    "patient-3-species": "",
+    "patient-4-species": "",
+    "patient-5-species": "",
+    "patient-6-species": "",
+    "patient-1-kennel": "",
+    "patient-2-kennel": "",
+    "patient-3-kennel": "",
+    "patient-4-kennel": "",
+    "patient-5-kennel": "",
+    "patient-6-kennel": ""
   },
   "editHistory": [
     {
-      "time": "Jun 8, 01:05:54 PM",
+      "time": "Jun 9, 10:34:45 AM",
       "action": {
         "isTrusted": true
       },
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:39 PM",
+      "time": "Jun 9, 10:34:43 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:43 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:42 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:40 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:39 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:36 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:33 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:33 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:33 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:33 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:33 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:33 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:32 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:27 AM",
+      "action": {
+        "isTrusted": true
+      },
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:20 AM",
       "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:32 PM",
+      "time": "Jun 9, 10:34:13 AM",
+      "action": "Updated text: \"tetetete\"",
+      "pc": "Pharmacy"
+    },
+    {
+      "time": "Jun 9, 10:34:09 AM",
       "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:29 PM",
+      "time": "Jun 9, 10:34:09 AM",
       "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:28 PM",
-      "action": "Updated text: \"ingested lillies\"",
+      "time": "Jun 9, 10:34:09 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:16 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:08 AM",
+      "action": "Updated text: \"dfsdf\"",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:16 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:05 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:16 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:04 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:16 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:04 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:16 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:04 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:16 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:04 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:16 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:04 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:16 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:03 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:15 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:03 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     },
     {
-      "time": "Jun 8, 01:02:15 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:02:14 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:53 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:53 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:52 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:52 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:52 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:52 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:52 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:52 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:51 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:51 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:51 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:51 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:50 PM",
-      "action": {
-        "isTrusted": true
-      },
-      "pc": "Pharmacy"
-    },
-    {
-      "time": "Jun 8, 01:01:50 PM",
-      "action": {
-        "isTrusted": true
-      },
+      "time": "Jun 9, 10:34:02 AM",
+      "action": "Board updated",
       "pc": "Pharmacy"
     }
   ],
   "idexx": {
     "idexx-date": "Jun 8",
-    "idexx-called": true,
+    "idexx-called": false,
     "idexx-fridge": false,
     "idexx-outside": false
   }

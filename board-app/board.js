@@ -464,7 +464,7 @@ function initDrBoxMode() {
     });
 }
 
-// Save and sync left patient Name/Weight fields
+// Save and sync left patient Name/Species fields
 function savePatientFields(action = "Updated patient details") {
     const patientFields = document.querySelectorAll(".patient-field");
     const patientData = {};
@@ -625,7 +625,95 @@ function initIdexxCalendar() {
     });
 }
 
-// Load left patient Name/Weight fields
+// ---- Kennel pickers ----
+function initKennelPickers() {
+    // Move all kennel grids to board-container so they aren't clipped by block overflow:hidden
+    const boardContainer = document.querySelector(".board-container");
+
+    document.querySelectorAll(".kennel-btn").forEach(btn => {
+        const patientNum = btn.dataset.patient;
+        const hiddenInput = document.getElementById(`patient-${patientNum}-kennel`);
+        if (!hiddenInput) return;
+
+        // Find or create the grid; move it to board-container
+        let grid = document.getElementById(`kennel-grid-${patientNum}`);
+        if (grid && grid.parentElement !== boardContainer) {
+            boardContainer.appendChild(grid);
+        }
+        if (!grid) return;
+        grid.style.position = "fixed";
+
+        // Build the 4×3 grid (1-12) plus a clear cell
+        grid.innerHTML = "";
+        for (let n = 1; n <= 12; n++) {
+            const cell = document.createElement("div");
+            cell.className = "kennel-cell";
+            cell.textContent = n;
+            cell.dataset.value = n;
+            cell.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const val = String(n);
+                hiddenInput.value = val;
+                hiddenInput.dispatchEvent(new Event("change", { bubbles: true }));
+                btn.textContent = `K: ${val}`;
+                btn.classList.add("selected");
+                grid.querySelectorAll(".kennel-cell").forEach(c => c.classList.remove("selected"));
+                cell.classList.add("selected");
+                grid.style.display = "none";
+            });
+            grid.appendChild(cell);
+        }
+        // Clear cell — sits as the 13th cell in the grid
+        const clearCell = document.createElement("div");
+        clearCell.className = "kennel-cell clear-cell";
+        clearCell.textContent = "✕";
+        clearCell.title = "Clear kennel";
+        clearCell.addEventListener("click", (e) => {
+            e.stopPropagation();
+            hiddenInput.value = "";
+            hiddenInput.dispatchEvent(new Event("change", { bubbles: true }));
+            btn.textContent = "K: --";
+            btn.classList.remove("selected");
+            grid.querySelectorAll(".kennel-cell").forEach(c => c.classList.remove("selected"));
+            grid.style.display = "none";
+        });
+        grid.appendChild(clearCell);
+
+        // Toggle grid open/close, position under the button
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = grid.style.display === "grid";
+            // Close all other kennel grids
+            document.querySelectorAll(".kennel-grid").forEach(g => g.style.display = "none");
+            if (!isOpen) {
+                const rect = btn.getBoundingClientRect();
+                grid.style.left = rect.left + "px";
+                grid.style.top = (rect.bottom + 2) + "px";
+                grid.style.display = "grid";
+            }
+        });
+    });
+}
+
+function updateKennelButtons() {
+    document.querySelectorAll(".kennel-field").forEach(input => {
+        const id = input.dataset.id; // e.g. "patient-3-kennel"
+        const patientNum = id.replace("patient-", "").replace("-kennel", "");
+        const btn = document.querySelector(`.kennel-btn[data-patient="${patientNum}"]`);
+        const grid = document.getElementById(`kennel-grid-${patientNum}`);
+        if (!btn) return;
+        const val = input.value;
+        btn.textContent = val ? `K: ${val}` : "K: --";
+        btn.classList.toggle("selected", !!val);
+        if (grid && val) {
+            grid.querySelectorAll(".kennel-cell").forEach(c => {
+                c.classList.toggle("selected", c.dataset.value === val);
+            });
+        }
+    });
+}
+
+// Load left patient Name/Species fields
 function loadPatientFields() {
     try {
         const savedData = localStorage.getItem(PATIENT_FIELDS_STORAGE_KEY);
@@ -639,15 +727,16 @@ function loadPatientFields() {
                     resizePatientInput(input);
                 }
             });
+            updateKennelButtons();
         }
     } catch (error) {
         console.error("Error loading patient fields:", error);
     }
 }
 
-// Auto-resize a patient input based on its content (weight only; name fills full width via CSS)
+// Auto-resize patient inputs only for freeform fields (none currently need dynamic sizing)
 function resizePatientInput(input) {
-    if (input.classList.contains("patient-name")) return;
+    if (input.classList.contains("patient-name") || input.classList.contains("patient-species")) return;
     const len = input.value.length;
     const minCh = 4;
     input.style.width = Math.max(minCh, len) + "ch";
@@ -926,6 +1015,7 @@ blocks.forEach(block => {
             blocks.forEach(b => b.classList.remove("active"));
             currentBlock = id;
             block.classList.add("active");
+            updateUndoRedoButtons();
         });
 
         // Handle drop from toolbar buttons
@@ -1649,15 +1739,15 @@ function saveBlock(id) {
     const cleanedData = [...boxData, ...listData];
     
     // Only update if there's actual data
-    if (cleanedData.length > 0) {
-        undoStack[id] = [cleanedData];
-        redoStack[id] = [];
-    }
+    if (!undoStack[id]) undoStack[id] = [];
+    undoStack[id].push(cleanedData);
+    redoStack[id] = [];
 
     window.api.updateBlock({
         id: id,
         data: cleanedData
     });
+    updateUndoRedoButtons();
 }
 
 function redrawBlock(id) {
@@ -1671,7 +1761,7 @@ function redrawBlock(id) {
     if (undoStack[id].length === 0) return;
 
     const inverseScaleFactor = getInverseScaleFactor();
-    const allData = undoStack[id][0];
+    const allData = undoStack[id][undoStack[id].length - 1];
 
     allData.forEach(item => {
         if (item.type === "text") {
@@ -1813,6 +1903,10 @@ window.addEventListener("load", () => {
     loadEuthChecklist();
     loadPatientFields();
     initPatientFieldMode();
+    initKennelPickers();
+    if (mode === "board") {
+        document.querySelectorAll(".kennel-btn").forEach(btn => btn.disabled = true);
+    }
     loadIdexx();
     initIdexxMode();
     initIdexxCalendar();
@@ -1888,6 +1982,7 @@ if (window.api.onPatientFieldsChanged) {
                 }
             }
         });
+        updateKennelButtons();
         localStorage.setItem(PATIENT_FIELDS_STORAGE_KEY, JSON.stringify(data));
     });
 }
@@ -1937,9 +2032,10 @@ function undo(id) {
     redrawBlock(id);
     window.api.updateBlock({
         id: id,
-        data: undoStack[id][0] || []
+        data: undoStack[id][undoStack[id].length - 1] || []
     });
     saveDataToStorage();
+    updateUndoRedoButtons();
 }
 
 function redo(id) {
@@ -1952,6 +2048,7 @@ function redo(id) {
         data: undoStack[id][undoStack[id].length - 1]
     });
     saveDataToStorage();
+    updateUndoRedoButtons();
 }
 
 // Deselect when clicking outside boxes
@@ -1960,12 +2057,33 @@ document.addEventListener("click", (e) => {
     if (e.target.closest(".text-box") || e.target.closest(".list-container") || e.target.classList.contains("resize-handle")) {
         return;
     }
-    
+    // Close kennel grids unless clicking inside one or on a kennel button
+    if (!e.target.closest(".kennel-grid") && !e.target.closest(".kennel-btn")) {
+        document.querySelectorAll(".kennel-grid").forEach(g => g.style.display = "none");
+    }
     deselectAll();
     if (!e.target.closest("#editHistoryPanel") && !e.target.closest("#editHistoryBtn")) {
         setEditHistoryPanelOpen(false);
     }
 });
+
+window.undoCurrentBlock = function() {
+    if (currentBlock) undo(currentBlock);
+};
+
+window.redoCurrentBlock = function() {
+    if (currentBlock) redo(currentBlock);
+};
+
+function updateUndoRedoButtons() {
+    const undoBtn = document.getElementById("undoBtn");
+    const redoBtn = document.getElementById("redoBtn");
+    if (!undoBtn || !redoBtn) return;
+    const canUndo = currentBlock && undoStack[currentBlock] && undoStack[currentBlock].length > 0;
+    const canRedo = currentBlock && redoStack[currentBlock] && redoStack[currentBlock].length > 0;
+    undoBtn.disabled = !canUndo;
+    redoBtn.disabled = !canRedo;
+}
 
 window.setTool = function(selectedTool) {
     tool = selectedTool;
@@ -1982,8 +2100,47 @@ window.setFontColor = function(color) {
 window.clearBlock = function() {
     if (!currentBlock) return;
 
-    undoStack[currentBlock] = [[]];
+    // Capture current state onto the undo stack before wiping, so it can be restored
+    const block = document.querySelector(`.block[data-id="${currentBlock}"]`);
+    const textContainer = block.querySelector(".text-container");
+    const textBoxes = textContainer.querySelectorAll(".text-box");
+    const listContainers = textContainer.querySelectorAll(".list-container");
+    const currentSnapshot = [
+        ...Array.from(textBoxes)
+            .filter(b => b.textContent.trim() !== "")
+            .map(b => ({
+                type: "text",
+                text: b.innerHTML,
+                x: parseFloat(b.style.left),
+                y: parseFloat(b.style.top),
+                width: parseFloat(b.style.width),
+                height: parseFloat(b.style.height),
+                fontSize: b.style.fontSize,
+                color: b.style.color
+            })),
+        ...Array.from(listContainers)
+            .filter(c => Array.from(c.querySelectorAll(".list-item")).some(i => i.querySelector(".list-label").textContent.trim() !== ""))
+            .map(c => ({
+                type: "list",
+                items: Array.from(c.querySelectorAll(".list-item"))
+                    .filter(i => i.querySelector(".list-label").textContent.trim() !== "")
+                    .map(i => ({ text: i.querySelector(".list-label").textContent, checked: i.querySelector(".list-checkbox").checked })),
+                x: parseFloat(c.style.left),
+                y: parseFloat(c.style.top),
+                width: parseFloat(c.style.width),
+                height: parseFloat(c.style.height),
+                fontSize: c.querySelector(".list-label").style.fontSize,
+                color: c.querySelector(".list-label").style.color
+            }))
+    ];
+    if (currentSnapshot.length > 0) {
+        if (!undoStack[currentBlock]) undoStack[currentBlock] = [];
+        undoStack[currentBlock].push(currentSnapshot);
+    }
     redoStack[currentBlock] = [];
+
+    // Push the empty state
+    undoStack[currentBlock].push([]);
 
     redrawBlock(currentBlock);
     window.api.updateBlock({
@@ -1991,6 +2148,7 @@ window.clearBlock = function() {
         data: []
     });
     saveDataToStorage();
+    updateUndoRedoButtons();
 };
 
 // Room clear buttons — wipe text content, reset Dr. dropdown, and sync
